@@ -14,8 +14,7 @@
 wget -O ql.sh https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/ql.sh && bash ql.sh
 
 
----
-```
+
 
 ## 第二步
 
