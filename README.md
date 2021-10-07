@@ -62,7 +62,7 @@ wget -O ql.sh https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL
 
 
 一键单独安装任务（青龙安装好后，登录页面后，可以用这个单独安装任务）
-docker exec -it qinglong bash -c "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/279437541/ql/main/feverrun.sh)"
+docker exec -it qinglong bash -c "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/feverrun.sh)"
 
 
 一键单独安装docker
