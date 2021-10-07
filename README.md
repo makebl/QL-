@@ -9,7 +9,7 @@
 自动检测docker，有则跳过，无则执行安装，如果是openwrt则不会自动安装docker
 如果您以前安装有青龙的话，则自动删除您的青龙，全部推倒重新安装
 如果有条件的话，最好使用翻墙网络来安装，要不然安装依赖的时候你会急死的
-
+----------------------------------------------------------------
 
 wget -O ql.sh https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/ql.sh && bash ql.sh
 
