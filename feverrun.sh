@@ -37,15 +37,15 @@ wx_jysz_shell_path=$dir_script/wx_jysz.js
 OpenCard_shell_path=$dir_script/raw_jd_OpenCard.py
 task_before_shell_path=$dir_shell/task_before.sh
 sample_shell_path=/ql/sample/config.sample.sh
-git clone https://ghproxy.com/https://github.com/shidahuilang/QL- qlwj
+git clone https://ghproxy.com/https://github.com/279437541/QL- qlwj
 if [[ $? -ne 0 ]];then
 	mkdir -p /ql/qlwj
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/wx_jysz.js > /ql/qlwj/wx_jysz.js
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/extra.sh > /ql/qlwj/extra.sh
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wx_jysz.js > /ql/qlwj/wx_jysz.js
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/extra.sh > /ql/qlwj/extra.sh
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
 	if [[ $? -ne 0 ]];then
 		TIME y "应用文件下载失败"
 		    exit 1
