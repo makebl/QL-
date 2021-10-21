@@ -142,9 +142,9 @@ else
 		echo
 		TIME y "没发现有docker，正在安装docker，请稍后..."
 		echo
-		wget -O docker.sh https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/docker.sh && bash docker.sh
+		wget -O docker.sh https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/docker.sh && bash docker.sh
 		if [[ $? -ne 0 ]];then
-			wget -qO docker.sh https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/docker.sh > docker.sh && bash docker.sh
+			wget -qO docker.sh https://cdn.jsdelivr.net/gh/279437541/QL-@main/docker.sh > docker.sh && bash docker.sh
 			if [[ $? -ne 0 ]];then
 				echo
 				TIME r "下载安装docker文件失败，请检查网络..."
@@ -233,9 +233,9 @@ if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
 		docker cp /opt/qlbak1/db/auth.db qinglong:/ql/db/auth.db
 	fi
 	#docker=$(docker ps -a|grep qinglong) && dockerid=$(awk '{print $(1)}' <<<${docker})
-	#curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/feverrun/nginx.conf > /root/nginx.conf
+	#curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/feverrun/nginx.conf > /root/nginx.conf
 	#if [[ $? -ne 0 ]];then
-		#curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/nginx.conf > /root/nginx.conf
+		#curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/nginx.conf > /root/nginx.conf
 	#fi
 	#docker cp /root/nginx.conf "${dockerid}":/ql/docker/
 	docker restart qinglong
@@ -253,9 +253,9 @@ if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
 		TIME g "检测到您已有配置，继续使用您的[帐号密码文件]和[环境变量文件]来安装使用,免除您设置烦恼!"
 		echo
 		sleep 5
-		docker exec -it qinglong bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/feverrun.sh)"
+		docker exec -it qinglong bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/feverrun.sh)"
 		if [[ $? -ne 0 ]];then
-			docker exec -it qinglong bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun.sh)"
+			docker exec -it qinglong bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun.sh)"
 			if [[ $? -ne 0 ]];then
 				echo
 				TIME r "下载脚本文件失败，请检查网络..."
@@ -295,9 +295,9 @@ if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
 				echo
 				TIME y "开始安装脚本，请耐心等待..."
 				echo
-				docker exec -it qinglong bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/feverrun.sh)"
+				docker exec -it qinglong bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/feverrun.sh)"
 				if [[ $? -ne 0 ]];then
-					docker exec -it qinglong bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun.sh)"
+					docker exec -it qinglong bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun.sh)"
 					if [[ $? -ne 0 ]];then
 						echo
 						TIME r "下载脚本文件失败，请检查网络..."
