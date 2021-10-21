@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# 0
+# 
 TIME() {
 [[ -z "$1" ]] && {
 	echo -ne " "
@@ -32,12 +32,11 @@ if [[ "$USER" == "root" ]]; then
 	echo
 	echo
 	echo
-	TIME z "脚本适用于（ubuntu、debian、openwrt、centos）"
+	TIME z "脚本适用于（ubuntu、debian、centos、openwrt）"
 	TIME z "一键安装青龙，包括（docker、任务、依赖安装，一条龙服务），安装路径[opt]"
 	TIME z "自动检测docker，有则跳过，无则安装，openwrt则请自行安装docker，如果空间太小请挂载好硬盘"
 	TIME z "如果您以前安装有青龙的话，则自动删除您的青龙容器和镜像，全部推倒重新安装"
-	TIME z "如果您有需要备份的青龙文件，请先备份好文件再来安装，避免造成损失"
-	TIME z "建议使用翻墙网络安装，要不然安装依赖的时候你会急死的"
+	TIME z "如果您以前青龙文件在root/ql或者/opt/ql，如果您的[帐号密码文件]和[环境变量文件]符合要求，就会继续使用"
 	TIME g "如要不能接受的话，请选择 3 回车退出程序!"
 	echo
 	echo
@@ -84,7 +83,7 @@ fi
 echo
 echo
 [[ "${QING_PORT}" == "YES" ]] && {
-	TIME g "请设置端口，默认为端口[5700]，不懂设置的话，直接回车跳过"
+	TIME g "请设置端口，默认端口为[5700]，不懂设置的话，直接回车跳过"
 	read -p " 请输入端口：" QL_PORT
 	QL_PORT=${QL_PORT:-"5700"}
 	TIME y "您端口为：${QL_PORT}"
@@ -98,19 +97,19 @@ if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
 	TIME g "正在安装宿主机所需要的依赖，请稍后..."
 	QL_PATH="/opt"
 	yum -y update
-	yum -y install sudo curl git
+	yum -y install sudo wget curl git
 	yum -y install net-tools.x86_64
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
 	TIME g "正在安装宿主机所需要的依赖，请稍后..."
 	QL_PATH="/opt"
 	apt-get -y update
-	apt-get -y install sudo curl git
+	apt-get -y install sudo wget curl git
 	apt-get -y install net-tools
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
 	TIME g "正在安装宿主机所需要的依赖，请稍后..."
 	QL_PATH="/opt"
 	apt -y update
-	apt -y install sudo curl git
+	apt -y install sudo wget curl git
 	apt -y install net-tools
 elif [[ "$(. /etc/os-release && echo "$ID")" == "openwrt" ]]; then
 	QL_PATH="/opt"
@@ -146,6 +145,12 @@ else
 		wget -O docker.sh https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/docker.sh && bash docker.sh
 		if [[ $? -ne 0 ]];then
 			wget -qO docker.sh https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/docker.sh > docker.sh && bash docker.sh
+			if [[ $? -ne 0 ]];then
+				echo
+				TIME r "下载安装docker文件失败，请检查网络..."
+				exit 1
+				echo
+			fi
 		fi
 		
 	fi
@@ -167,76 +172,38 @@ else
 		echo
 		sleep 3
 		exit 1
+	else
+		systemctl start docker
+		sleep 8
 	fi
 fi
-if [[ `docker ps -a | grep -c "whyour"` -ge '1' ]]; then
+if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
 	echo
 	TIME y "检测到已有青龙面板，正在删除旧的青龙容器和镜像，请稍后..."
 	echo
-	if [ -n "$(ls -A "/opt/ql" 2>/dev/null)" ]; then
+	if [[ -n "$(ls -A "/opt/ql/config" 2>/dev/null)" ]] || [[ -n "$(ls -A "/root/ql/config" 2>/dev/null)" ]]; then
 		echo
-		TIME y "为避免损失，正在把 /opt/ql 备份到 /opt/qlbak"
-		rm -fr /opt/qlbak
-		mv /opt/ql /opt/qlbak
+		TIME g "为避免损失，正在把opt或者root的 /ql/config和/ql/db 备份到 /opt/qlbak 文件夹"
+		echo
+		TIME y "如有需要备份文件的请到 /opt/ql 文件夹查看"
+		echo
+
+	        rm -fr /opt/qlbak && mkdir -p /opt/qlbak
+		cp -r /opt/ql/config /opt/qlbak/config > /dev/null 2>&1
+		cp -r /opt/ql/db /opt/qlbak/db > /dev/null 2>&1
+		cp -r /root/ql/config /opt/qlbak/config > /dev/null 2>&1
+		cp -r /root/ql/db /opt/qlbak/db > /dev/null 2>&1
+		cp -r /opt/qlbak /opt/qlbak1 > /dev/null 2>&1
 		rm -rf /opt/ql
 	fi
 	docker=$(docker ps -a|grep qinglong) && dockerid=$(awk '{print $(1)}' <<<${docker})
-	images=$(docker images|grep qinglong) && imagesid=$(awk '{print $(3)}' <<<${images})
+	#images=$(docker images|grep qinglong) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}"
-	docker rm "${dockerid}"
-	docker rmi "${imagesid}"
+        docker rm "${dockerid}"
+	#docker rmi "${imagesid}"
 fi
 
-if [[ "$(. /etc/os-release && echo "$ID")" == "openwrt" ]]; then
-	Available="$(df -h | grep "/opt/docker" | awk '{print $4}' | awk 'NR==1')"
-	FINAL=`echo ${Available: -1}`
-	if [[ "${FINAL}" =~ (M|K) ]]; then
-		echo
-		TIME r "敬告：可用空间小于[ 2G ]，不支持安装青龙，请挂载好大于2G的[opt]路径的硬盘"
-		echo
-		sleep 2
-		exit 1
-		echo
-	fi
-else
-	Ubunkj="$(df -h | grep "/dev/*/" | awk '{print $4}' | awk 'NR==1')"
-	FINAL=`echo ${Ubunkj: -1}`
-	if [[ "${FINAL}" =~ (M|K) ]]; then
-		echo
-		TIME r "敬告：可用空间小于[ 2G ]，不支持安装青龙，请加大磁盘空间容量"
-		echo
-		sleep 2
-		exit 1
-		echo
-	fi
-fi
-if [[ "$(. /etc/os-release && echo "$ID")" == "openwrt" ]]; then
-	Overlay_Available="$(df -h | grep "/opt/docker" | awk '{print $4}' | awk 'NR==1' | sed 's/.$//g')"
-	Kongjian="$(awk -v num1=${Overlay_Available} -v num2=1 'BEGIN{print(num1>num2)?"0":"1"}')"
-		echo
-		TIME y "您当前系统可用空间为${Overlay_Available}G"
-		echo
-	if [[ "${Kongjian}" == "1" ]];then
-		echo
-		TIME r "敬告：可用空间小于[ 2G ]，不支持安装青龙，请挂载好[opt]路径的硬盘"
-		echo
-		sleep 2
-		exit 1
-	fi
-else
-	Ubuntu_kj="$(df -h | grep "/dev/*/" | awk '{print $4}' | awk 'NR==1' | sed 's/.$//g')"
-	Kongjian="$(awk -v num1=${Ubuntu_kj} -v num2=2 'BEGIN{print(num1>num2)?"0":"1"}')"
-		echo
-		TIME y "您当前系统可用空间为${Ubuntu_kj}G"
-		echo
-	if [[ "${Kongjian}" == "1" ]];then
-		echo
-		TIME r "敬告：可用空间小于[ 2G ]，不支持安装青龙，请加大磁盘空间"
-		echo		
-		sleep 2
-		exit 1
-	fi
-fi
+
 if [ -z "$(ls -A "/opt" 2>/dev/null)" ]; then
 	mkdir -p /opt
 fi
@@ -258,63 +225,103 @@ docker run -dit \
   --restart always \
   whyour/qinglong:latest
 
-if [[ `docker ps -a | grep -c "whyour"` -ge '1' ]]; then
+if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
+	if [[ -n "$(ls -A "/opt/qlbak1" 2>/dev/null)" ]]; then
+		docker cp /opt/qlbak1/config/env.sh qinglong:/ql/config/env.sh
+		docker cp /opt/qlbak1/db/env.db qinglong:/ql/db/env.db
+		docker cp /opt/qlbak1/config/auth.json qinglong:/ql/config/auth.json
+		docker cp /opt/qlbak1/db/auth.db qinglong:/ql/db/auth.db
+	fi
+	#docker=$(docker ps -a|grep qinglong) && dockerid=$(awk '{print $(1)}' <<<${docker})
+	#curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/feverrun/nginx.conf > /root/nginx.conf
+	#if [[ $? -ne 0 ]];then
+		#curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/nginx.conf > /root/nginx.conf
+	#fi
+	#docker cp /root/nginx.conf "${dockerid}":/ql/docker/
 	docker restart qinglong
-	sleep 13
+	sleep 10
 	clear
 	echo
 	echo
 	echo
-	TIME z "青龙面板安装完成，下一步进入安装脚本程序"
-	echo
-	TIME y " "${IP}":"${QL_PORT}"  (IP检测因数太多，不一定准确，仅供参考)"
-	echo
-	TIME g "请使用 "${IP}":"${QL_PORT}" 在浏览器登录控制面板，然后在环境变量里添加好WSKEY或者PT_KEY，再按Y进入下一步"
-	echo
-	TIME y "您也可以不添加WSKEY或者PT_KEY，但是一定要登录控制面板"
-	echo
-	TIME g "登录页面，点击[开始安装]，设置好[用户名]跟[密码],然后点击[提交]，[通知方式]跳过，以后再设置，然后点击[去登录]，输入帐号密码完成登录!"
-	echo
-	while :; do
-	read -p " [ N/n ]退出程序，[ Y/y ]回车继续安装脚本： " MENU
 	if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]]; then
-		S="Yy"
-	else
 		echo
-		TIME r "提示：一定要登录管理面板之后再执行下一步操作,或者您输入[N/n]按回车退出!"
+		TIME z "青龙面板安装完成，下一步进入安装脚本程序"
 		echo
-		
-
-		
-	fi
-	case $MENU in
-		[${S}])
-			echo
-			TIME y "开始安装脚本，请耐心等待..."
-			echo
-			cp -r /opt/qlbak/db/env.db /opt/ql/db
-			cp -r /opt/qlbak/config /opt/ql
-			docker exec -it qinglong bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/feverrun.sh)"
+		TIME y " "${IP}":"${QL_PORT}"  (IP检测因数太多，不一定准确，仅供参考)"
+		echo
+		TIME g "检测到您已有配置，继续使用您的[帐号密码文件]和[环境变量文件]来安装使用,免除您设置烦恼!"
+		echo
+		sleep 5
+		docker exec -it qinglong bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/feverrun.sh)"
+		if [[ $? -ne 0 ]];then
+			docker exec -it qinglong bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun.sh)"
 			if [[ $? -ne 0 ]];then
-				docker exec -it qinglong bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun.sh)"
+				echo
+				TIME r "下载脚本文件失败，请检查网络..."
+				exit 1
+				echo
 			fi
-			sleep 2
-			exit 0
-		break
-		;;
-		[Nn])
+		fi
+		echo
+		TIME y "使用 "${IP}":"${QL_PORT}" 在浏览器打开页面，刷新页面，然后用你的旧帐号密码登录您的青龙面板"
+		echo
+		TIME g "如果不记得帐号密码请在 /opt/ql/config/auth.json 文件查看"
+		echo
+		exit 0
+	
+	else
+		TIME z "青龙面板安装完成，下一步进入安装脚本程序"
+		echo
+		TIME y " "${IP}":"${QL_PORT}"  (IP检测因数太多，不一定准确，仅供参考)"
+		echo
+		TIME g "请使用 IP:端口 在浏览器打开控制面板"
+		echo
+		TIME y "点击[开始安装]，[通知方式]跳过，设置好[用户名]跟[密码],然后点击[提交]，然后点击[去登录]，输入帐号密码完成登录!"
+		echo
+		TIME g "登录进入后在左侧[环境变量]添加WSKEY或者PT_KEY，不添加也没所谓，以后添加一样，但是一定要登录进入后才继续下一步操作"
+		echo
+		while :; do
+		read -p " [ N/n ]退出程序，[ Y/y ]回车继续安装脚本： " MENU
+		if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]]; then
+			S="Yy"
+		else
 			echo
-			TIME r "退出安装程序!"
+			TIME r "提示：一定要登录管理面板之后再执行下一步操作,或者您输入[N/n]按回车退出!"
 			echo
-			sleep 2
-			exit 1
-		break
-    		;;
-    		*)
-			TIME r ""
-		;;
-	esac
-	done
+		fi
+		case $MENU in
+			[${S}])
+				echo
+				TIME y "开始安装脚本，请耐心等待..."
+				echo
+				docker exec -it qinglong bash -c  "$(curl -fsSL https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/feverrun.sh)"
+				if [[ $? -ne 0 ]];then
+					docker exec -it qinglong bash -c "$(curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun.sh)"
+					if [[ $? -ne 0 ]];then
+						echo
+						TIME r "下载脚本文件失败，请检查网络..."
+						exit 1
+						echo
+					fi
+				fi
+				exit 0
+			break
+			;;
+			[Nn])
+				echo
+				TIME r "退出安装程序!"
+				echo
+				sleep 2
+				exit 1
+			break
+    			;;
+    			*)
+				TIME r ""
+			;;
+		esac
+		done
+	fi
 else
 	echo
 	echo
@@ -323,6 +330,5 @@ else
 	sleep 2
 	exit 1
 fi
-echo
 echo
 exit 0
