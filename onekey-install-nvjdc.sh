@@ -166,7 +166,7 @@ git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
 apt install wget unzip -y
 cd /root/nvjdc
 mkdir -p  Config && cd Config
-cd /root/nolanjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
+cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
 mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
 wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip > /dev/null 2>&1 
 unzip chrome-linux.zip > /dev/null 2>&1 
