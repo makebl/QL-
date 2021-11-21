@@ -219,8 +219,8 @@ EOF
 #创建并启动nvjdc容器
 cd /root/nvjdc
 log_action_begin_msg "开始创建nvjdc容器"
-docker run   --name nvjdc -p ${jdcport}:80 -d  -v  "$(pwd)"/Config.json:/app/Config/Config.json:ro \
--v "$(pwd)"/.local-chromium:/app/.local-chromium  \
+docker run   --name nvjdc -p 5800:80 -d  -v  "$(pwd)":/app \
+-v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  10529459/lanyannvjdc:1.4
 
 
