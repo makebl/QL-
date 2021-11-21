@@ -82,25 +82,7 @@ docker pull 10529459/lanyannvjdc:1.4
 apt install wget unzip -y
 cd /root/nvjdc
 mkdir -p  Config && cd Config
-cd .. && cd ..
-cat /root/nvjdc/Config/Config.json
 {
-    ///最大支持几个网页
-    "MaxTab": "20",
-    //网站标题
-    "Title": "Nvjdc",
-    //回收时间分钟 不填默认3分钟
-    "Closetime": "3",
-    //网站公告
-    "Announcement": "NolanHzy大佬写的工具，可以通过短信登录获取cookie，并自动同步到青龙面板那边，不再需要手动更新cookie",
-    ///开启打印等待日志卡短信验证登陆 可开启 拿到日志群里回复 默认不要填写
-    "Debug": "",
-    ///自动滑块次数5次 5次后手动滑块 可设置为0默认手动滑块
-    "AutoCaptchaCount": "5",
-    ///XDD PLUS Url  http://IP地址:端口/api/login/smslogin
-    "XDDurl": "",
-    ///xddToken
-    "XDDToken": "",
     ///多青龙配置
     "Config": [
         {
