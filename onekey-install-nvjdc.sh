@@ -167,12 +167,7 @@ docker pull 10529459/lanyannvjdc:1.4
 apt install wget unzip -y
 cd /root/nvjdc
 mkdir -p  Config && cd Config
-cd /root/nolanjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip
-rm  -f chrome-linux.zip
-cd  /root/nvjdc
-
-cd .. && cd ..
+cd /root/nvjdc/Config/Config.json
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
@@ -180,34 +175,50 @@ read -p "请输入青龙服务器的url地址（类似http://192.168.2.2:5700）
 read -p "请输入nvjdc面板希望使用的端口号: " jdcport && printf "\n"
 cat >> Config.json << EOF
 {
-  ///最大支持几个网页
-  "MaxTab": "4",
-  //网站标题
-  "Title": "NolanJDCloud",
-  //网站公告
-  "Announcement": "本项目脚本收集于互联网，为了您的财产安全，请关闭京东免密支付。",
-  ///多青龙配置
-  "Config": [
-    {
-      //序号必须从1开始
-      "QLkey": 1,
-      //服务器名称
-      "QLName": "${QLName}",
-      //青龙url
-      "QLurl": "${QLurl}",
-      //青龙2,9 OpenApi Client ID
-      "QL_CLIENTID": "${ClientID}",
-      //青龙2,9 OpenApi Client Secret
-      "QL_SECRET": "${ClientSecret}",
-      //青龙面包最大ck容量
-      "QL_CAPACITY": 45,
-      //消息推送二维码
-      "QRurl":""
-    }
-  ]
-
+    ///最大支持几个网页
+    "MaxTab": "20",
+    //网站标题
+    "Title": "Nvjdc",
+    //回收时间分钟 不填默认3分钟
+    "Closetime": "3",
+    //网站公告
+    "Announcement": "NolanHzy大佬写的工具，可以通过短信登录获取cookie，并自动同步到青龙面板那边，不再需要手动更新cookie",
+    ///开启打印等待日志卡短信验证登陆 可开启 拿到日志群里回复 默认不要填写
+    "Debug": "",
+    ///自动滑块次数5次 5次后手动滑块 可设置为0默认手动滑块
+    "AutoCaptchaCount": "5",
+    ///XDD PLUS Url  http://IP地址:端口/api/login/smslogin
+    "XDDurl": "",
+    ///xddToken
+    "XDDToken": "",
+    ///多青龙配置
+    "Config": [
+        {
+            //序号必须从1开始
+            "QLkey": 1,
+            //服务器名称
+            "QLName": "青龙面板",
+            //青龙url
+            "QLurl": "http://qinglong:5700",
+            //青龙2,9 OpenApi Client ID
+            "QL_CLIENTID": "",
+            //青龙2,9 OpenApi Client Secret
+            "QL_SECRET": "",
+            //青龙面包最大ck容量
+            "QL_CAPACITY": 200,
+            //消息推送二维码
+            "QRurl": ""
+        }
+    ]
 }
+
 EOF
+cd /root/nolanjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
+wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip
+rm  -f chrome-linux.zip
+cd  /root/nvjdc
+
+
 #判断机器是否安装docker
 if test -z "$(which docker)"; then
 echo -e "检测到系统未安装docker，开始安装docker"
