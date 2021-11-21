@@ -167,7 +167,7 @@ docker pull 10529459/lanyannvjdc:1.4
 apt install wget unzip -y
 cd /root/nvjdc
 mkdir -p  Config && cd Config
-cd /root/nvjdc/Config/Config.json
+cat /root/nvjdc/Config/Config.json
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
