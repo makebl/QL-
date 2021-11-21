@@ -163,14 +163,13 @@ exit
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
+docker pull 10529459/lanyannvjdc:1.4
 apt install wget unzip -y
 cd /root/nvjdc
 mkdir -p  Config && cd Config
-cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip > /dev/null 2>&1 
-unzip chrome-linux.zip > /dev/null 2>&1 
-rm  -f chrome-linux.zip > /dev/null 2>&1 
+cd /root/nolanjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
+wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip
+rm  -f chrome-linux.zip
 cd  /root/nvjdc
 
 cd .. && cd ..
@@ -216,10 +215,6 @@ echo -e "检测到系统未安装docker，开始安装docker"
     curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
 
-#拉取nvjdc镜像
-log_action_begin_msg "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
-docker pull 10529459/lanyannvjdc:1.4
-log_action_end_msg $?
 
 #创建并启动nvjdc容器
 log_action_begin_msg "开始创建nvjdc容器"
