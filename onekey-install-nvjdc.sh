@@ -82,7 +82,7 @@ docker pull 10529459/lanyannvjdc:1.4
 apt install wget unzip -y
 cd /root/nvjdc
 mkdir -p  Config && cd Config
-cat >> /root/nvjdc/Config/Config.json
+cat /root/nvjdc/Config/Config.json
 {
     ///最大支持几个网页
     "MaxTab": "20",
