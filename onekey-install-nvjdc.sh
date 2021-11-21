@@ -82,12 +82,7 @@ docker pull 10529459/lanyannvjdc:1.4
 apt install wget unzip -y
 cd /root/nvjdc
 mkdir -p  Config && cd Config
-read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
-read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
-read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
-read -p "请输入青龙服务器的url地址（类似http://192.168.2.2:5700）: " QLurl && printf "\n"
-read -p "请输入nvjdc面板希望使用的端口号: " jdcport && printf "\n"
-cat >> Config/Config.json << EOF
+cat >> /root/nvjdc/Config/Config.json
 {
     ///最大支持几个网页
     "MaxTab": "20",
