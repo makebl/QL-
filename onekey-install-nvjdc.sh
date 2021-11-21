@@ -235,7 +235,7 @@ portinfo=$(docker port nvjdc | head -1  | sed 's/ //g' | sed 's/80\/tcp->0.0.0.0
 baseip=$(curl -s ipip.ooo)  > /dev/null
 docker rm -f nvjdc
 docker pull nolanhzy/nvjdc:latest
-docker run   --name nvjdc -p ${portinfo}:80 -d  -v  "$(pwd)"/Config.json:/app/Config/Config.json:ro \
+docker run   --name nvjdc -p ${portinfo}:80 -d  -v  "$(pwd)"/app \
 -v "$(pwd)"/.local-chromium:/app/.local-chromium  \
 -it --privileged=true  nolanhzy/nvjdc:latest
 echo -e "${green}nvjdc更新完毕，脚本自动退出。${plain}"
