@@ -217,13 +217,13 @@ fi
 
 
 #创建并启动nvjdc容器
+cd /root/nvjdc
 log_action_begin_msg "开始创建nvjdc容器"
 docker run   --name nolanjdc -p ${portinfo}:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  10529459/lanyannvjdc:1.4
 
-log_action_end_msg $?
-baseip=$(curl -s ipip.ooo)  > /dev/null
+
 
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${plain}"
 echo -e "${green}Faker集合仓库频道：${plain}${red}https://t.me/pandaqx${plain}"
