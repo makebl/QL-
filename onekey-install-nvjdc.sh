@@ -7,67 +7,7 @@ plain='\033[0m'
 # check root
 [[ $EUID -ne 0 ]] && echo -e "${red}错误: ${plain} 必须使用root用户运行此脚本！\n" && exit 1
 clear
-# globals
-CWD=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
-[ -e "${CWD}/scripts/globals" ] && . ${CWD}/scripts/globals
 
-# import functions
-[ -e "/lib/lsb/init-functions" ] && . /lib/lsb/init-functions
-[ -e "${CWD}/scripts/functions" ] && . ${CWD}/scripts/functions
-
-checkos(){
-  ifTermux=$(echo $PWD | grep termux)
-  ifMacOS=$(uname -a | grep Darwin)
-  if [ -n "$ifTermux" ];then
-    os_version=Termux
-  elif [ -n "$ifMacOS" ];then
-    os_version=MacOS  
-  else  
-    os_version=$(grep 'VERSION_ID' /etc/os-release | cut -d '"' -f 2 | tr -d '.')
-  fi
-  
-  if [[ "$os_version" == "2004" ]] || [[ "$os_version" == "10" ]] || [[ "$os_version" == "11" ]];then
-    ssll="-k --ciphers DEFAULT@SECLEVEL=1"
-  fi
-}
-checkos 
-
-checkCPU(){
-  CPUArch=$(uname -m)
-  if [[ "$CPUArch" == "aarch64" ]];then
-    arch=linux_arm64
-  elif [[ "$CPUArch" == "i686" ]];then
-    arch=linux_386
-  elif [[ "$CPUArch" == "arm" ]];then
-    arch=linux_arm
-  elif [[ "$CPUArch" == "x86_64" ]] && [ -n "$ifMacOS" ];then
-    arch=darwin_amd64
-  elif [[ "$CPUArch" == "x86_64" ]];then
-    arch=linux_amd64    
-  fi
-}
-checkCPU
-check_dependencies(){
-
-  os_detail=$(cat /etc/os-release 2> /dev/null)
-  if_debian=$(echo $os_detail | grep 'ebian')
-  if_redhat=$(echo $os_detail | grep 'rhel')
-  if [ -n "$if_debian" ];then
-    InstallMethod="apt"
-  elif [ -n "$if_redhat" ] && [[ "$os_version" -lt 8 ]];then
-    InstallMethod="yum"
-  elif [[ "$os_version" == "MacOS" ]];then
-    InstallMethod="brew"  
-  fi
-}
-check_dependencies
-#安装wget、curl、unzip
-${InstallMethod} install unzip wget curl -y > /dev/null 2>&1 
-get_opsy() {
-  [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
-  [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
-  [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
-}
 virt_check() {
   # if hash ifconfig 2>/dev/null; then
   # eth=$(ifconfig)
@@ -119,29 +59,7 @@ virt_check() {
     virtual="Dedicated母鸡"
   fi
 }
-get_system_info() {
-  cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  #cores=$(awk -F: '/model name/ {core++} END {print core}' /proc/cpuinfo)
-  #freq=$(awk -F: '/cpu MHz/ {freq=$2} END {print freq}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  #corescache=$(awk -F: '/cache size/ {cache=$2} END {print cache}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  #tram=$(free -m | awk '/Mem/ {print $2}')
-  #uram=$(free -m | awk '/Mem/ {print $3}')
-  #bram=$(free -m | awk '/Mem/ {print $6}')
-  #swap=$(free -m | awk '/Swap/ {print $2}')
-  #uswap=$(free -m | awk '/Swap/ {print $3}')
-  #up=$(awk '{a=$1/86400;b=($1%86400)/3600;c=($1%3600)/60} {printf("%d days %d hour %d min\n",a,b,c)}' /proc/uptime)
-  #load=$(w | head -1 | awk -F'load average:' '{print $2}' | sed 's/^[ \t]*//;s/[ \t]*$//')
-  opsy=$(get_opsy)
-  arch=$(uname -m)
-  #lbit=$(getconf LONG_BIT)
-  kern=$(uname -r)
-  # disk_size1=$( LANG=C df -hPl | grep -wvE '\-|none|tmpfs|overlay|shm|udev|devtmpfs|by-uuid|chroot|Filesystem' | awk '{print $2}' )
-  # disk_size2=$( LANG=C df -hPl | grep -wvE '\-|none|tmpfs|overlay|shm|udev|devtmpfs|by-uuid|chroot|Filesystem' | awk '{print $3}' )
-  # disk_total_size=$( calc_disk ${disk_size1[@]} )
-  # disk_used_size=$( calc_disk ${disk_size2[@]} )
-  #tcpctrl=$(sysctl net.ipv4.tcp_congestion_control | awk -F ' ' '{print $3}')
-  virt_check
-}
+
 copyright(){
     clear
 echo -e "
@@ -149,7 +67,6 @@ echo -e "
         Nvjdc自助面板一键安装脚本                    
  ${green}                
         
-
   
 —————————————————————————————————————————————————————————————
 "
@@ -209,7 +126,6 @@ cat >> Config.json << EOF
         }
     ]
 }
-
 EOF
 
 
