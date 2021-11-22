@@ -39,17 +39,16 @@ wx_jysz_shell_path=$dir_script/wx_jysz.js
 OpenCard_shell_path=$dir_script/raw_jd_OpenCard.py
 task_before_shell_path=$dir_shell/task_before.sh
 sample_shell_path=/ql/sample/config.sample.sh
-git clone https://ghproxy.com/https://github.com/shidahuilang/QL- qlwj
 if [[ $? -ne 0 ]];then
 	mkdir -p /ql/qlwj
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/wx_jysz.js > /ql/qlwj/wx_jysz.js
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/extra.sh > /ql/qlwj/extra.sh
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
-	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
-    curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/Evaluation.py > /ql/qlwj/Evaluation.py
-    curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/curtinlv_JD-Script_jd_tool_dl.py > /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wx_jysz.js > /ql/qlwj/wx_jysz.js
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/extra.sh > /ql/qlwj/extra.sh
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
+	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
+        curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/Evaluation.py > /ql/qlwj/Evaluation.py
+        curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/curtinlv_JD-Script_jd_tool_dl.py > /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py
 	if [[ $? -ne 0 ]];then
 		TIME y "应用文件下载失败"
 		    exit 1
@@ -127,7 +126,7 @@ if [ "$(grep -c Evaluation.py /ql/config/crontab.list)" = 0 ]; then
     echo
     # 获取token
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
-    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"JD入会开卡领取京豆","command":"task raw_jd_OpenCard.py","schedule":"8 8,15,20 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634097051985'
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"自动评价助手","command":"task raw_jd_OpenCard.py","schedule":"0 6 */3 * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634097051985'
 fi
 echo
 echo
