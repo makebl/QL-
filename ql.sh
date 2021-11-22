@@ -179,28 +179,25 @@ fi
 if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
 	echo
 	TIME y "检测到已有青龙面板，正在删除旧的青龙容器和镜像，请稍后..."
-	if [[ -z "$(ls -A "$QL_PATH/qlbak" 2>/dev/null)" ]]; then
+	if [[ -z "$(ls -A "$QL_PATH/qlbeifen1" 2>/dev/null)" ]]; then
 		if [[ -n "$(ls -A "$QL_PATH/ql/config" 2>/dev/null)" ]]; then
 			echo
-			TIME g "检测到 $QL_PATH/ql ,为避免损失，正在把 $QL_PATH/ql 备份到 $QL_PATH/qlbak 文件夹"
+			TIME g "检测到 $QL_PATH/ql ,为避免损失，正在把 $QL_PATH/ql 备份到 $QL_PATH/qlbeifen 文件夹"
 			echo
-			TIME y "如有需要备份文件的请到 $QL_PATH/qlbak 文件夹查看"
+			TIME y "如有需要备份文件的请到 $QL_PATH/qlbeifen 文件夹查看"
 			echo
-		    rm -fr $QL_PATH/qlbak && mkdir -p /opt/qlbak
-		    cp -r $QL_PATH/ql/config /opt/qlbak/config > /dev/null 2>&1
-                    cp -r $QL_PATH/ql/db /opt/qlbak/db > /dev/null 2>&1
-	            cp -r $QL_PATH/ql/config /opt/qlbak/config > /dev/null 2>&1
-	    	    cp -r $QL_PATH/ql/db /opt/qlbak/db > /dev/null 2>&1
-	    	    cp -r $QL_PATH/qlbak /opt/qlbak1 > /dev/null 2>&1
-		    rm -rf $QL_PATH/ql
-		    sleep 3
+			rm -fr $QL_PATH/qlbeifen && mkdir -p $QL_PATH/qlbeifen
+			cp -r $QL_PATH/ql $QL_PATH/qlbeifen/ql > /dev/null 2>&1
+			cp -r $QL_PATH/qlbeifen $QL_PATH/qlbeifen1 > /dev/null 2>&1
+			rm -rf $QL_PATH/ql
+			sleep 3
 		fi
 	fi
 	docker=$(docker ps -a|grep qinglong) && dockerid=$(awk '{print $(1)}' <<<${docker})
-        #images=$(docker images|grep qinglong) && imagesid=$(awk '{print $(3)}' <<<${images})
+	images=$(docker images|grep qinglong) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
 	docker rm "${dockerid}"
-	 #docker rmi "${imagesid}"
+	docker rmi "${imagesid}"
 fi
 if [[ "$(. /etc/os-release && echo "$ID")" == "openwrt" ]]; then
 	Available="$(df -h | grep "${QL_Kongjian}" | awk '{print $4}' | awk 'NR==1')"
@@ -271,12 +268,11 @@ docker run -dit \
   whyour/qinglong:latest
 export local_ip="$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)"
 if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
-	if [[ -n "$(ls -A "${QL_PATH}/qlbak1" 2>/dev/null)" ]]; then
-		docker cp ${QL_PATH}/qlbak1/ql/config/env.sh qinglong:/ql/config/env.sh
-		docker cp ${QL_PATH}/qlbak1/ql/db/env.db qinglong:/ql/db/env.db
-		docker cp ${QL_PATH}/qlbak1/ql/config/auth.json qinglong:/ql/config/auth.json
-		docker cp ${QL_PATH}/qlbak1/ql/db/auth.db qinglong:/ql/db/auth.db
-		docker cp ${QL_PATH}/qlbak1/config/bot.json qinglong:/ql/config/bot.json
+	if [[ -n "$(ls -A "${QL_PATH}/qlbeifen1" 2>/dev/null)" ]]; then
+		docker cp ${QL_PATH}/qlbeifen1/ql/config/env.sh qinglong:/ql/config/env.sh
+		docker cp ${QL_PATH}/qlbeifen1/ql/db/env.db qinglong:/ql/db/env.db
+		docker cp ${QL_PATH}/qlbeifen1/ql/config/auth.json qinglong:/ql/config/auth.json
+		docker cp ${QL_PATH}/qlbeifen1/ql/db/auth.db qinglong:/ql/db/auth.db
 	fi
 	if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` == '0' ]]; then
 		curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/authbk.json > ${QL_PATH}/ql/authbk.json
@@ -307,7 +303,7 @@ if [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
 	TIME y "点击[开始安装]，[通知方式]跳过，设置好[用户名]跟[密码],然后点击[提交]，然后点击[去登录]，输入帐号密码完成登录!"
 	echo
 	TIME y "完成登录后,请设置好 wskey 或者 pt_key "	
-	rm -fr ${QL_PATH}/qlbak1 > /dev/null 2>&1
+	rm -fr ${QL_PATH}/qlbeifen1 > /dev/null 2>&1
 	rm -fr ${QL_PATH}/ql/authbk.json > /dev/null 2>&1
 	echo
 	exit 0
