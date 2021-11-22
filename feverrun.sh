@@ -33,19 +33,20 @@ code_shell_path=$dir_shell/code.sh
 disable_shell_path=$dir_script/disableDuplicateTasksImplement.py
 wskey_shell_path=$dir_script/wskey.py
 crypto_shell_path=$dir_script/crypto-js.js
-wx_jysz_shell_path=$dir_script/wx_jysz.js
+Evaluation_shell_path=$dir_script/Evaluation.py
+curtinlv_JD-Script_jd_tool_dl_shell_path=$dir_script/curtinlv_JD-Script_jd_tool_dl.py
 OpenCard_shell_path=$dir_script/raw_jd_OpenCard.py
 task_before_shell_path=$dir_shell/task_before.sh
 sample_shell_path=/ql/sample/config.sample.sh
 mkdir -p /ql/qlwj
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/auth.json > /ql/qlwj/auth.json
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/extra.sh > /ql/qlwj/extra.sh
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/wskey.py > /ql/qlwj/wskey.py
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/curtinlv_JD-Script_jd_tool_dl.py > /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/ql@main/feverrun/Evaluation.py > /ql/qlwj/Evaluation.py
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/auth.json > /ql/qlwj/auth.json
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/extra.sh > /ql/qlwj/extra.sh
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/curtinlv_JD-Script_jd_tool_dl.py > /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/Evaluation.py > /ql/qlwj/Evaluation.py
 chmod -R +x /ql/qlwj
 cp -Rf /ql/qlwj/config.sample.sh /ql/config/config.sh
 cp -Rf /ql/qlwj/config.sample.sh /ql/sample/config.sample.sh
