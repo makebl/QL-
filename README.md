@@ -11,7 +11,7 @@
 如果有条件的话，最好使用翻墙网络来安装，要不然安装依赖的时候你会急死的
 
 ``` bash
-wget -O ql.sh https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/ql.sh && bash ql.sh
+wget -O ql.sh https://ghproxy.com/https://raw.githubusercontent.com/279437541/QL-/main/ql.sh && bash ql.sh
 ```
 
 
