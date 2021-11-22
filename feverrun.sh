@@ -33,19 +33,23 @@ code_shell_path=$dir_shell/code.sh
 disable_shell_path=$dir_script/Disable.py
 wskey_shell_path=$dir_script/wskey.py
 crypto_shell_path=$dir_script/crypto-js.js
+Evaluation_shell_path=$dir_script/Evaluation.py
+curtinlv_JD-Script_jd_tool_dl_shell_path=$dir_script/curtinlv_JD-Script_jd_tool_dl.py
 wx_jysz_shell_path=$dir_script/wx_jysz.js
 OpenCard_shell_path=$dir_script/raw_jd_OpenCard.py
 task_before_shell_path=$dir_shell/task_before.sh
 sample_shell_path=/ql/sample/config.sample.sh
-git clone https://ghproxy.com/https://github.com/279437541/QL- qlwj
+git clone https://ghproxy.com/https://github.com/shidahuilang/QL- qlwj
 if [[ $? -ne 0 ]];then
 	mkdir -p /ql/qlwj
-	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wx_jysz.js > /ql/qlwj/wx_jysz.js
-	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
-	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
-	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/extra.sh > /ql/qlwj/extra.sh
-	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
-	curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
+	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/wx_jysz.js > /ql/qlwj/wx_jysz.js
+	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/crypto-js.js > /ql/qlwj/crypto-js.js
+	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/config.sample.sh > /ql/qlwj/config.sample.sh
+	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/extra.sh > /ql/qlwj/extra.sh
+	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
+	curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
+    curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/Evaluation.py > /ql/qlwj/Evaluation.py
+    curl -fsSL https://cdn.jsdelivr.net/gh/shidahuilang/QL-@main/feverrun/curtinlv_JD-Script_jd_tool_dl.py > /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py
 	if [[ $? -ne 0 ]];then
 		TIME y "应用文件下载失败"
 		    exit 1
@@ -63,6 +67,8 @@ cp -Rf /ql/qlwj/feverrun/raw_jd_OpenCard.py /ql/scripts/raw_jd_OpenCard.py
 cp -Rf /ql/qlwj/feverrun/wskey.py /ql/scripts/wskey.py
 cp -Rf /ql/qlwj/feverrun/wx_jysz.js /ql/scripts/wx_jysz.js
 cp -Rf /ql/qlwj/feverrun/crypto-js.js /ql/scripts/crypto-js.js
+cp -Rf /ql/qlwj/Evaluation.py /ql/scripts/Evaluation.py
+cp -Rf /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py /ql/scripts/curtinlv_JD-Script_jd_tool_dl.py
 echo
 
 # 将 extra.sh 添加到定时任务
@@ -112,16 +118,16 @@ if [ "$(grep -c raw_jd_OpenCard.py /ql/config/crontab.list)" = 0 ]; then
     curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"JD入会开卡领取京豆","command":"task raw_jd_OpenCard.py","schedule":"8 8,15,20 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634041221437'
 fi
 
-# 将 wx_jysz.js 添加到定时任务
-if [ "$(grep -c wx_jysz.js /ql/config/crontab.list)" = 0 ]; then
+# 将 Evaluation.py 添加到定时任务
+if [ "$(grep -c Evaluation.py /ql/config/crontab.list)" = 0 ]; then
     echo
     echo
-    TIME g "开始添加 [微信_金银手指]"
+    TIME g "开始添加 [自动评价助手]"
     echo
     echo
     # 获取token
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
-    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"微信_金银手指","command":"task wx_jysz.js","schedule":"0 8-22/1 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634097051985'
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"JD入会开卡领取京豆","command":"task raw_jd_OpenCard.py","schedule":"8 8,15,20 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634097051985'
 fi
 echo
 echo
@@ -164,52 +170,54 @@ else
 	exit 1
 fi
 echo
-TIME g "正在安装依赖，安装依赖需要时间，请耐心等候..."
+TIME l "安装依赖..."
 echo
+TIME y "安装依赖需要时间，请耐心等待!"
 echo
-npm config set registry https://registry.npm.taobao.org
-cd /ql
-npm install -g npm
-cd /ql
+sleep 2
+npm config set registry https://mirrors.huaweicloud.com/repository/npm/
+npm config get registry
+TIME l "安装依赖png-js"
 npm install -g png-js
-cd /ql
+TIME l "安装依赖date-fns"
 npm install -g date-fns
-cd /ql
+TIME l "安装依赖axios"
 npm install -g axios
-cd /ql
+TIME l "安装依赖crypto-js"
 npm install -g crypto-js
-cd /ql
+TIME l "安装依赖md5"
+npm install -g md5
+TIME l "安装依赖ts-md5"
 npm install -g ts-md5
-cd /ql
+TIME l "安装依赖tslib"
 npm install -g tslib
-cd /ql
+TIME l "安装依赖@types/node"
 npm install -g @types/node
-cd /ql
+TIME l "安装依赖requests"
 npm install -g requests
-cd /ql
+TIME l "安装依赖tough-cookie"
 npm install -g tough-cookie
-cd /ql
+TIME l "安装依赖jsdom"
 npm install -g jsdom
-cd /ql
+TIME l "安装依赖download"
 npm install -g download
-cd /ql
+TIME l "安装依赖tunnel"
 npm install -g tunnel
-cd /ql
+TIME l "安装依赖fs"
 npm install -g fs
-cd /ql
+TIME l "安装依赖ws"
 npm install -g ws
+TIME l "安装依赖js-base64"
+npm install -g js-base64
+TIME l "安装依赖jieba"
+npm install -g jieba
+TIME l "安装pnpm"
+cd /ql/scripts/ && apk add --no-cache build-base g++ cairo-dev pango-dev giflib-dev && pnpm install && pnpm i ts-node typescript @types/node date-fns axios download canvas
 cd /ql
-pip3 install requests
-cd /ql
-cd /ql/scripts/ && apk add --no-cache build-base g++ cairo-dev pango-dev giflib-dev && npm i && npm i -S ts-node typescript @types/node date-fns axios png-js canvas --build-from-source
-cd /ql
-apk add --no-cache build-base g++ cairo-dev pango-dev giflib-dev && cd scripts && npm install canvas --build-from-source
-cd /ql
+TIME l "安装python3"
 apk add python3 zlib-dev gcc jpeg-dev python3-dev musl-dev freetype-dev
 cd /ql
 echo
 TIME g "依赖安装完毕..."
-echo
-echo
 echo
 exit 0
