@@ -212,17 +212,17 @@ echo -e "检测到系统未安装docker，开始安装docker"
 fi
 
 #拉取nvjdc镜像
-log_action_begin_msg "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
+TIME g "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
 docker pull 10529459/lanyannvjdc:1.4
-log_action_end_msg $?
+
 
 #创建并启动nvjdc容器
-log_action_begin_msg "开始创建nvjdc容器"
+TIME g "开始创建nvjdc容器"
 docker run   --name nvjdc -p ${jdcport}:80 -d  -v  "$(pwd)"/Config.json:/app \
 -v "$(pwd)"/.local-chromium:/app/.local-chromium  \
 -it --privileged=true  10529459/lanyannvjdc:1.4
 
-log_action_end_msg $?
+
 baseip=$(curl -s ipip.ooo)  > /dev/null
 
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${plain}"
