@@ -33,8 +33,7 @@ code_shell_path=$dir_shell/code.sh
 disable_shell_path=$dir_script/disableDuplicateTasksImplement.py
 wskey_shell_path=$dir_script/wskey.py
 crypto_shell_path=$dir_script/crypto-js.js
-Evaluation_shell_path=$dir_script/Evaluation.py
-curtinlv_JD-Script_jd_tool_dl_shell_path=$dir_script/curtinlv_JD-Script_jd_tool_dl.py
+wx_jysz_shell_path=$dir_script/wx_jysz.js
 OpenCard_shell_path=$dir_script/raw_jd_OpenCard.py
 task_before_shell_path=$dir_shell/task_before.sh
 sample_shell_path=/ql/sample/config.sample.sh
@@ -46,7 +45,8 @@ curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/extra.sh > /q
 curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
 curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/wskey.py > /ql/qlwj/wskey.py
 curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/curtinlv_JD-Script_jd_tool_dl.py > /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py
-curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/Evaluation.py > /ql/qlwj/Evaluation.py
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/feverrun/jd_Evaluation.py > /ql/qlwj/jd_Evaluation.py
+curl -fsSL https://cdn.jsdelivr.net/gh/279437541/QL-@main/Aaron-lv/jd_get_share_code.js > /ql/qlwj/jd_get_share_code.js
 chmod -R +x /ql/qlwj
 cp -Rf /ql/qlwj/config.sample.sh /ql/config/config.sh
 cp -Rf /ql/qlwj/config.sample.sh /ql/sample/config.sample.sh
@@ -57,25 +57,28 @@ cp -Rf /ql/qlwj/wskey.py /ql/scripts/wskey.py
 cp -Rf /ql/qlwj/crypto-js.js /ql/scripts/crypto-js.js
 cp -Rf /ql/qlwj/curtinlv_JD-Script_jd_tool_dl.py /ql/scripts/curtinlv_JD-Script_jd_tool_dl.py
 cp -Rf /ql/qlwj/jd_Evaluation.py /ql/scripts/jd_Evaluation.py
+echo
 
 # 将 extra.sh 添加到定时任务
 if [ "$(grep -c extra /ql/config/crontab.list)" = 0 ]; then
     echo
-    TIME g "添加任务 [每6小时更新任务]"
+    TIME g "添加任务 [每8小时更新任务]"
     echo
     # 获取token
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
-    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"每6小时更新任务","command":"ql extra","schedule":"40 0-23/5 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1624782068473'
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"每8小时更新任务","command":"ql extra","schedule":"* */8 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1624782068473'
 fi
+sleep 2
 echo
 if [ "$(grep -c wskey.py /ql/config/crontab.list)" = 0 ]; then
     echo
-    TIME g "添加任务 [每6小时转换WSKEY]"
+    TIME g "添加任务 [早9晚11点更新WSKEY]"
     echo
     # 获取token
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
-    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"每6小时转换WSKEY","command":"task wskey.py","schedule":"58 0-23/5 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1633428022377'
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"早9晚11点更新WSKEY","command":"task wskey.py","schedule":"0 9,23 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1633428022377'
 fi
+sleep 2
 echo
 # 将 bot 添加到定时任务
 if [ "$(grep -c bot /ql/config/crontab.list)" = 0 ]; then
@@ -86,6 +89,7 @@ if [ "$(grep -c bot /ql/config/crontab.list)" = 0 ]; then
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
     curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"拉取机器人","command":"ql bot","schedule":"13 14 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1626247933219'
 fi
+sleep 2
 echo
 # 将 raw_jd_OpenCard.py 添加到定时任务
 if [ "$(grep -c raw_jd_OpenCard.py /ql/config/crontab.list)" = 0 ]; then
@@ -96,16 +100,38 @@ if [ "$(grep -c raw_jd_OpenCard.py /ql/config/crontab.list)" = 0 ]; then
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
     curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"JD入会开卡领取京豆","command":"task raw_jd_OpenCard.py","schedule":"8 8,15,20 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634041221437'
 fi
+sleep 2
 echo
-# 将 Evaluation.py 添加到定时任务
-if [ "$(grep -c Evaluation.py /ql/config/crontab.list)" = 0 ]; then
+# 将 jd_Evaluation.py 添加到定时任务
+if [ "$(grep -c jd_Evaluation.py /ql/config/crontab.list)" = 0 ]; then
     echo
-    TIME g "添加任务 [自动评价晒图助手]"
+    TIME g "添加任务 [自动评价助手]"
     echo
     # 获取token
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
-    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"自动评价晒图助手","command":"task Evaluation.py","schedule":"0 6 */3 * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1637560543233'
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"京东全自动评价","command":"task jd_Evaluation.py","schedule":"0 6 */3 * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1637560543233'
 fi
+sleep 2
+echo
+# 将 jd_get_share_code.js 添加到定时任务
+if [ "$(grep -c jd_get_share_code.js /ql/config/crontab.list)" = 0 ]; then
+    echo
+    TIME g "添加任务 [获取互助码1-5]"
+    echo
+    # 获取token
+    token=$(cat /ql/config/auth.json | jq --raw-output .token)
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"获取互助码1-5","command":"task jd_get_share_code.js desi JD_COOKIE 1-5","schedule":"20 13 * * 6"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1637505495835'
+fi
+sleep 2
+echo
+# 将 jd_get_share_code.js 添加到定时任务
+echo
+TIME g "添加任务 [获取互助码6-10]"
+echo
+# 获取token
+token=$(cat /ql/config/auth.json | jq --raw-output .token)
+curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"获取互助码6-10","command":"task jd_get_share_code.js desi JD_COOKIE 6-10","schedule":"22 13 * * 6"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1637509073623'
+sleep 2
 echo
 if [[ "$(grep -c JD_WSCK=\"pin= /ql/config/env.sh)" = 1 ]]; then
     echo
@@ -200,6 +226,5 @@ cd /ql
 task curtinlv_JD-Script_jd_tool_dl.py
 echo
 TIME g "依赖安装完毕..."
-echo
 echo
 exit 0
