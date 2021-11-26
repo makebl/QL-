@@ -163,19 +163,21 @@ exit
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
-mkdir nvjdc && cd nvjdc 
+docker pull 10529459/lanyannvjdc:1.4
+cd /root/nvjdc
+mkdir -p  Config && cd Config
 mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
 wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip > /dev/null 2>&1 
 unzip chrome-linux.zip > /dev/null 2>&1 
 rm  -f chrome-linux.zip > /dev/null 2>&1 
 
-cd .. && cd ..
+cd /root/nvjdc/Config
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
 read -p "请输入青龙服务器的url地址（类似http://192.168.2.2:5700）: " QLurl && printf "\n"
 read -p "请输入nvjdc面板希望使用的端口号: " jdcport && printf "\n"
-cat >> Config.json << EOF
+cat >> /root/nvjdc/Config/Config.json << EOF
 {
   ///最大支持几个网页
   "MaxTab": "4",
@@ -219,7 +221,7 @@ docker pull 10529459/lanyannvjdc:1.4
 
 #创建并启动nvjdc容器
 TIME g "开始创建nvjdc容器"
-docker run   --name nvjdc -p 5211:80 -d  -v  "$(pwd)":/app \
+docker run   --name nvjdc -p 5711:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  10529459/lanyannvjdc:1.4
 
