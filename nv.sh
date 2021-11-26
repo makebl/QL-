@@ -164,14 +164,21 @@ install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
 docker pull 10529459/lanyannvjdc:1.4
+echo
 cd /root/nvjdc
+echo
 mkdir -p  Config && cd Config
+echo
 mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
+echo
 wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip > /dev/null 2>&1 
+echo
 unzip chrome-linux.zip > /dev/null 2>&1 
+echo
 rm  -f chrome-linux.zip > /dev/null 2>&1 
-
+echo
 cd /root/nvjdc/Config
+echo
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
