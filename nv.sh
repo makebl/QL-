@@ -159,7 +159,7 @@ echo -e "
 quit(){
 exit
 }
-
+if
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
@@ -213,6 +213,7 @@ cat >> /root/nvjdc/Config/Config.json << EOF
   ]
 
 }
+fi
 EOF
 #判断机器是否安装docker
 if test -z "$(which docker)"; then
@@ -221,9 +222,6 @@ echo -e "检测到系统未安装docker，开始安装docker"
     curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
 
-#拉取nvjdc镜像
-TIME g "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
-docker pull 10529459/lanyannvjdc:1.4
 
 
 #创建并启动nvjdc容器
