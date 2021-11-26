@@ -159,7 +159,7 @@ echo -e "
 quit(){
 exit
 }
-if
+
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
@@ -178,13 +178,13 @@ echo
 rm  -f chrome-linux.zip > /dev/null 2>&1 
 echo
 cd /root/nvjdc/Config
-echo
+cat >> /root/nvjdc/Config/Config.json << EOF
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
 read -p "请输入青龙服务器的url地址（类似http://192.168.2.2:5700）: " QLurl && printf "\n"
 read -p "请输入nvjdc面板希望使用的端口号: " jdcport && printf "\n"
-cat >> /root/nvjdc/Config/Config.json << EOF
+
 {
   ///最大支持几个网页
   "MaxTab": "4",
@@ -213,7 +213,6 @@ cat >> /root/nvjdc/Config/Config.json << EOF
   ]
 
 }
-fi
 EOF
 #判断机器是否安装docker
 if test -z "$(which docker)"; then
