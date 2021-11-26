@@ -149,9 +149,7 @@ echo -e "
         Nvjdc自助面板一键安装脚本   by 翔翎                      
  ${green}                
         
-
         
-
         Faker仓库频道：${plain}${red}https://t.me/pandaqx${plain}   
 —————————————————————————————————————————————————————————————
 "
@@ -163,22 +161,13 @@ exit
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
-docker pull 10529459/lanyannvjdc:1.4
-echo
-cd /root/nvjdc
-echo
-mkdir -p  Config && cd Config
-echo
+mkdir nvjdc && cd nvjdc 
 mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-echo
-echo -e "下载chrome-linux.zip"
 wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip > /dev/null 2>&1 
-echo
 unzip chrome-linux.zip > /dev/null 2>&1 
-echo
 rm  -f chrome-linux.zip > /dev/null 2>&1 
-echo
-cd /root/nvjdc/Config
+
+cd .. && cd ..
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
@@ -211,7 +200,6 @@ cat >> /root/nvjdc/Config/Config.json << EOF
       "QRurl":""
     }
   ]
-
 }
 EOF
 #判断机器是否安装docker
@@ -221,11 +209,14 @@ echo -e "检测到系统未安装docker，开始安装docker"
     curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
 
+#拉取nvjdc镜像
+TIME g "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
+docker pull 10529459/lanyannvjdc:1.4
 
 
 #创建并启动nvjdc容器
 TIME g "开始创建nvjdc容器"
-docker run   --name nvjdc -p 5711:80 -d  -v  "$(pwd)":/app \
+docker run   --name nvjdc -p 5211:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  10529459/lanyannvjdc:1.4
 
