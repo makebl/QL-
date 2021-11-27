@@ -217,7 +217,7 @@ docker pull 10529459/lanyannvjdc:1.4
 echo
 cd  /root/nvjdc
 echo -e "创建并启动nvjdc容器"
-sudo docker run   --name nolanjdc -p 5211:80 -d  -v  "$(pwd)":/app \
+sudo docker run   --name nolanjdc -p ${jdcport}:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  10529459/lanyannvjdc:1.4
 echo
