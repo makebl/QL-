@@ -164,8 +164,8 @@ install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
 cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip > /dev/null 2>&1 
-#unzip chrome-linux.zip > /dev/null 2>&1 
+wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip > /dev/null 2>&1
+echo -e "删除chrome-linux.zip"
 rm  -f chrome-linux.zip > /dev/null 2>&1 
 #rm  -f /root/nvjdc/Config/Config.json
 cd /root/nvjdc/Config
