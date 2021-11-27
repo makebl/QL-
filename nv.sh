@@ -206,22 +206,15 @@ cat >> Config.json << EOF
 EOF
 
 cp -r /root/nvjdc/Config.json /root/nvjdc/Config/Config.json
-echo
-#判断机器是否安装docker
-if test -z "$(which docker)"; then
-echo -e "检测到系统未安装docker，开始安装docker"
-    curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun > /dev/null 2>&1 
-    curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-fi
-
 #拉取nvjdc镜像
 echo -e "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
-docker pull nolanhzy/nvjdc:latest
+docker pull 10529459/lanyannvjdc:1.4
+echo
 cd  /root/nvjdc
 echo -e "创建并启动nvjdc容器"
-docker run   --name nvjdc -p ${jdcport}:80 -d  -v  "$(pwd)"/Config.json:/app/Config/Config.json:ro \
--v "$(pwd)"/.local-chromium:/app/.local-chromium  \
--it --privileged=true  nolanhzy/nvjdc:latest
+sudo docker run   --name nolanjdc -p 5211:80 -d  -v  "$(pwd)":/app \
+-v /etc/localtime:/etc/localtime:ro \
+-it --privileged=true  10529459/lanyannvjdc:1.4
 echo
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${plain}"
 echo -e "${green}Faker集合仓库频道：${plain}${red}https://t.me/pandaqx${plain}"
