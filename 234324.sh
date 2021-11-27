@@ -151,6 +151,40 @@ baseip=$(curl -s ipip.ooo)  > /dev/null
 
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${plain}"
 }
+
+update_nvjdc(){
+  cd /root/nvjdc
+portinfo=$(docker port nvjdc | head -1  | sed 's/ //g' | sed 's/80\/tcp->0.0.0.0://g')
+baseip=$(curl -s ipip.ooo)  > /dev/null
+docker rm -f nvjdc
+docker pull shidahuilang/nvjdc:1.4
+sudo docker run   --name nolanjdc -p ${jdcport}:80 -d  -v  "$(pwd)":/app \
+-v /etc/localtime:/etc/localtime:ro \
+-it --privileged=true  shidahuilang/nvjdc:1.4
+echo -e "${green}nvjdc更新完毕，脚本自动退出。${plain}"
+echo -e "${green}面板访问地址：http://${baseip}:${portinfo}${plain}"
+exit 0
+}
+
+uninstall_nvjdc(){
+docker rm -f nvjdc
+docker rmi -f shidahuilang/nvjdc:1.4
+rm -rf nvjdc
+echo -e "${green}nvjdc面板已卸载，脚本自动退出。${plain}"
+exit 0
+}
+
+menu() {
+  echo -e "\
+${green}0.${plain} 退出脚本
+${green}1.${plain} 安装nvjdc
+${green}2.${plain} 升级nvjdc
+${green}3.${plain} 卸载nvjdc
+"
+get_system_info
+echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virtual${Font_color_suffix} $arch ${Green_font_prefix}$kern${Font_color_suffix}
+"
+
   read -p "请输入数字 :" num
   case "$num" in
   0)
@@ -167,13 +201,3 @@ echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${
     ;;    
   *)
   clear
-    echo -e "${Error}:请输入正确数字 [0-2]"
-    sleep 5s
-    menu
-    ;;
-  esac
-}
-
-copyright
-
-menu
