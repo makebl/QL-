@@ -152,7 +152,7 @@ echo -e "
 
         
 
-        Faker仓库频道：${plain}${red}https://t.me/pandaqx${plain}   
+        
 —————————————————————————————————————————————————————————————
 "
 }
@@ -162,13 +162,12 @@ exit
 
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
-mkdir nvjdc && cd nvjdc
-git clone https://github.com/btlanyan/nvjdc.git
-mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip > /dev/null 2>&1 
-unzip chrome-linux.zip > /dev/null 2>&1 
+git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
+cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
+wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip > /dev/null 2>&1 
+#unzip chrome-linux.zip > /dev/null 2>&1 
 rm  -f chrome-linux.zip > /dev/null 2>&1 
-
+rm  -f /root/nvjdc/Config/Config.json
 cd .. && cd ..
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
@@ -205,6 +204,9 @@ cat >> Config.json << EOF
 
 }
 EOF
+
+cp -r /root/nvjdc/Config.json /root/nvjdc/Config/Config.json
+echo
 #判断机器是否安装docker
 if test -z "$(which docker)"; then
 echo -e "检测到系统未安装docker，开始安装docker"
@@ -213,7 +215,7 @@ echo -e "检测到系统未安装docker，开始安装docker"
 fi
 
 #拉取nvjdc镜像
-log_action_begin_msg "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
+echo -e "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
 docker pull nolanhzy/nvjdc:latest
 
 #创建并启动nvjdc容器
@@ -234,7 +236,7 @@ portinfo=$(docker port nvjdc | head -1  | sed 's/ //g' | sed 's/80\/tcp->0.0.0.0
 baseip=$(curl -s ipip.ooo)  > /dev/null
 docker rm -f nvjdc
 docker pull nolanhzy/nvjdc:latest
-docker run   --name nvjdc -p ${portinfo}:80 -d  -v  "$(pwd)"/Config.json:/app/Config/Config.json:ro \
+docker run   --name nvjdc -p ${portinfo}:80 -d  -v  "$(pwd)"/Config.json:/app \
 -v "$(pwd)"/.local-chromium:/app/.local-chromium  \
 -it --privileged=true  nolanhzy/nvjdc:latest
 echo -e "${green}nvjdc更新完毕，脚本自动退出。${plain}"
@@ -244,7 +246,7 @@ exit 0
 
 uninstall_nvjdc(){
 docker rm -f nvjdc
-docker rmi -f nolanhzy/nvjdc:0.4
+docker rmi -f nolanhzy/nvjdc:1.4
 rm -rf nvjdc
 echo -e "${green}nvjdc面板已卸载，脚本自动退出。${plain}"
 exit 0
