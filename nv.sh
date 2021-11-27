@@ -149,11 +149,9 @@ echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
 cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
 wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip
-echo -e "删除chrome-linux.zip"
 rm  -f chrome-linux.zip > /dev/null 2>&1 
-#rm  -f /root/nvjdc/Config/Config.json > /dev/null 2>&1
-cd /root/nvjdc/Config
-#cd .. && cd .. && cd /root/nvjdc/Config
+rm  -f /root/nvjdc/Config/Config.json > /dev/null 2>&1
+cd .. && cd ..
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
@@ -195,7 +193,7 @@ echo -e "检测到系统未安装docker，开始安装docker"
     curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun > /dev/null 2>&1 
     curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
-#cp -r /root/nvjdc/Config.json /root/nvjdc/Config/Config.json
+cp -r /root/nvjdc/Config.json /root/nvjdc/Config/Config.json
 #拉取nvjdc镜像
 echo -e "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
 docker pull shidahuilang/nvjdc:1.4
