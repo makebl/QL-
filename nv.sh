@@ -149,7 +149,9 @@ echo -e "
         Nvjdc自助面板一键安装脚本   by 翔翎                      
  ${green}                
         
+
         
+
         Faker仓库频道：${plain}${red}https://t.me/pandaqx${plain}   
 —————————————————————————————————————————————————————————————
 "
@@ -160,17 +162,12 @@ exit
 
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
-git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
-cd /root/nvjdc
-
+mkdir nvjdc && cd nvjdc
+git clone https://github.com/btlanyan/nvjdc.git
+mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
+wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip > /dev/null 2>&1 
 unzip chrome-linux.zip > /dev/null 2>&1 
 rm  -f chrome-linux.zip > /dev/null 2>&1 
-mkdir -p  Config && cd Config
-cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
-wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip
-rm  -f chrome-linux.zip
-cd  /root/nvjdc
-
 
 cd .. && cd ..
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
@@ -178,7 +175,7 @@ read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
 read -p "请输入青龙服务器的url地址（类似http://192.168.2.2:5700）: " QLurl && printf "\n"
 read -p "请输入nvjdc面板希望使用的端口号: " jdcport && printf "\n"
-cat >> /root/nvjdc/Config/Config.json << EOF
+cat >> Config.json << EOF
 {
   ///最大支持几个网页
   "MaxTab": "4",
@@ -205,6 +202,7 @@ cat >> /root/nvjdc/Config/Config.json << EOF
       "QRurl":""
     }
   ]
+
 }
 EOF
 #判断机器是否安装docker
@@ -215,17 +213,15 @@ echo -e "检测到系统未安装docker，开始安装docker"
 fi
 
 #拉取nvjdc镜像
-TIME g "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
-docker pull 10529459/lanyannvjdc:1.4
-
+log_action_begin_msg "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
+docker pull nolanhzy/nvjdc:latest
 
 #创建并启动nvjdc容器
-TIME g "开始创建nvjdc容器"
-docker run   --name nvjdc -p 5211:80 -d  -v  "$(pwd)":/app \
--v /etc/localtime:/etc/localtime:ro \
--it --privileged=true  10529459/lanyannvjdc:1.4
+docker run   --name nvjdc -p ${jdcport}:80 -d  -v  "$(pwd)"/Config.json:/app/Config/Config.json:ro \
+-v "$(pwd)"/.local-chromium:/app/.local-chromium  \
+-it --privileged=true  nolanhzy/nvjdc:latest
 
-
+log_action_end_msg $?
 baseip=$(curl -s ipip.ooo)  > /dev/null
 
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${plain}"
@@ -248,7 +244,7 @@ exit 0
 
 uninstall_nvjdc(){
 docker rm -f nvjdc
-docker rmi -f 10529459/lanyannvjdc:1.4
+docker rmi -f nolanhzy/nvjdc:0.4
 rm -rf nvjdc
 echo -e "${green}nvjdc面板已卸载，脚本自动退出。${plain}"
 exit 0
