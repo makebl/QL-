@@ -187,10 +187,7 @@ ${green}0.${plain} 退出脚本
 ${green}1.${plain} 安装nvjdc
 ${green}2.${plain} 升级nvjdc
 ${green}3.${plain} 卸载nvjdc
-"
-get_system_info
-echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virtual${Font_color_suffix} $arch ${Green_font_prefix}$kern${Font_color_suffix}
-"
+
 
   read -p "请输入数字 :" num
   case "$num" in
