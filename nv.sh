@@ -168,7 +168,7 @@ wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014
 #unzip chrome-linux.zip > /dev/null 2>&1 
 rm  -f chrome-linux.zip > /dev/null 2>&1 
 rm  -f /root/nvjdc/Config/Config.json
-cd .. && cd ..
+cd /root/nvjdc/Config && cd /root/nvjdc/Config
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
