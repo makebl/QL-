@@ -69,9 +69,7 @@ get_opsy() {
   [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
 }
 virt_check() {
-  # if hash ifconfig 2>/dev/null; then
-  # eth=$(ifconfig)
-  # fi
+
 
   virtualx=$(dmesg) 2>/dev/null
 
@@ -155,7 +153,7 @@ echo -e "删除chrome-linux.zip"
 rm  -f chrome-linux.zip > /dev/null 2>&1 
 #rm  -f /root/nvjdc/Config/Config.json > /dev/null 2>&1
 cd /root/nvjdc/Config
-#cd .. && cd ..
+#cd .. && cd .. && cd /root/nvjdc/Config
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
