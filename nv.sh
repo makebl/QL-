@@ -217,9 +217,7 @@ fi
 #拉取nvjdc镜像
 echo -e "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
 docker pull nolanhzy/nvjdc:latest
-echo
 cd  /root/nvjdc
-echo
 echo -e "创建并启动nvjdc容器"
 docker run   --name nvjdc -p ${jdcport}:80 -d  -v  "$(pwd)"/Config.json:/app/Config/Config.json:ro \
 -v "$(pwd)"/.local-chromium:/app/.local-chromium  \
