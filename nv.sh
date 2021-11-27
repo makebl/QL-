@@ -151,14 +151,11 @@ echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
 cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
 wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip && unzip chrome-linux.zip > /dev/null 2>&1
-echo
 echo -e "删除chrome-linux.zip"
 rm  -f chrome-linux.zip > /dev/null 2>&1 
-echo
 #rm  -f /root/nvjdc/Config/Config.json > /dev/null 2>&1
 cd /root/nvjdc/Config
-echo
-cd .. && cd ..
+#cd .. && cd ..
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
