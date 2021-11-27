@@ -151,3 +151,29 @@ baseip=$(curl -s ipip.ooo)  > /dev/null
 
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${plain}"
 }
+  read -p "请输入数字 :" num
+  case "$num" in
+  0)
+    quit
+    ;;
+  1)
+    install_nvjdc
+    ;;
+  2)
+    update_nvjdc
+    ;;
+  3)
+    uninstall_nvjdc
+    ;;    
+  *)
+  clear
+    echo -e "${Error}:请输入正确数字 [0-2]"
+    sleep 5s
+    menu
+    ;;
+  esac
+}
+
+copyright
+
+menu
