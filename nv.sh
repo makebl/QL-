@@ -141,13 +141,13 @@ exit
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
 echo -e "${green}检测到已有nvjdc面板，正在删除旧的nvjdc文件容器镜像，请稍后...${plain}"
-        if
+
 	docker=$(docker ps -a|grep nvjdc) && dockerid=$(awk '{print $(1)}' <<<${docker})
 	images=$(docker images|grep nvjdc) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
 	docker rm "${dockerid}"
 	docker rmi "${imagesid}"
-fi	
+	
 rm  -rf /root/nvjdc
 git clone https://github.com/btlanyan/nvjdc.git /root/nvjdc
 cd /root/nvjdc && mkdir -p  .local-chromium/Linux-884014 && cd .local-chromium/Linux-884014
