@@ -214,13 +214,17 @@ cp -r /root/nvjdc/Config.json /root/nvjdc/Config/Config.json
 #拉取nvjdc镜像
 echo -e "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
 docker pull 10529459/lanyannvjdc:1.4
+log_action_end_msg $?
 echo
 cd  /root/nvjdc
 echo -e "创建并启动nvjdc容器"
 sudo docker run   --name nolanjdc -p ${jdcport}:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  10529459/lanyannvjdc:1.4
-echo
+
+log_action_end_msg $?
+baseip=$(curl -s ipip.ooo)  > /dev/null
+
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${jdcport}${plain}"
 echo -e "${green}Faker集合仓库频道：${plain}${red}https://t.me/pandaqx${plain}"
 }
