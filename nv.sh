@@ -154,14 +154,14 @@ wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014
 echo -e "删除chrome-linux.zip"
 rm  -f chrome-linux.zip > /dev/null 2>&1 
 #rm  -f /root/nvjdc/Config/Config.json
-cd .. && cd ..
+cd .. && cd .. && cd ..
 cd /root/nvjdc/Config
 read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
 read -p "请输入青龙OpenApi Client ID: " ClientID && printf "\n"
 read -p "请输入青龙OpenApi Client Secret: " ClientSecret && printf "\n"
 read -p "请输入青龙服务器的url地址（类似http://192.168.2.2:5700）: " QLurl && printf "\n"
 read -p "请输入nvjdc面板希望使用的端口号: " jdcport && printf "\n"
-cat >> /root/nvjdc/Config/Config.json << EOF
+cat >> Config.json << EOF
 {
   ///最大支持几个网页
   "MaxTab": "4",
