@@ -68,22 +68,8 @@ get_opsy() {
   [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
   [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
 }
-virt_check() {
 
 
-  virtualx=$(dmesg) 2>/dev/null
-
-
-}
-get_system_info() {
-  cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-
-  opsy=$(get_opsy)
-  arch=$(uname -m)
-  kern=$(uname -r)
-
-  virt_check
-}
 copyright(){
     clear
 echo -e "
