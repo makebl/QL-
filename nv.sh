@@ -191,13 +191,14 @@ echo -e "检测到系统未安装docker，开始安装docker"
     curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
 fi
 cp -r /root/nvjdc/Config.json /root/nvjdc/Config/Config.json
+rm  -f /root/nvjdc/Config.json
 #拉取nvjdc镜像
 echo -e "开始拉取nvjdc镜像文件，nvjdc镜像比较大，请耐心等待"
 docker pull shidahuilang/nvjdc:1.4
 echo
 cd  /root/nvjdc
 echo -e "创建并启动nvjdc容器"
-sudo docker run   --name nolanjdc -p ${jdcport}:80 -d  -v  "$(pwd)":/app \
+sudo docker run   --name nvjdc -p ${jdcport}:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  shidahuilang/nvjdc:1.4
 
@@ -213,7 +214,7 @@ portinfo=$(docker port nvjdc | head -1  | sed 's/ //g' | sed 's/80\/tcp->0.0.0.0
 baseip=$(curl -s ipip.ooo)  > /dev/null
 docker rm -f nvjdc
 docker pull shidahuilang/nvjdc:1.4
-sudo docker run   --name nolanjdc -p ${jdcport}:80 -d  -v  "$(pwd)":/app \
+sudo docker run   --name nvjdc -p ${jdcport}:80 -d  -v  "$(pwd)":/app \
 -v /etc/localtime:/etc/localtime:ro \
 -it --privileged=true  shidahuilang/nvjdc:1.4
 echo -e "${green}nvjdc更新完毕，脚本自动退出。${plain}"
