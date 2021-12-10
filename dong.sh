@@ -8,8 +8,7 @@ function Listening {
    (( Listeningnum = TCPListeningnum + UDPListeningnum ))
    if [ $Listeningnum == 0 ]; then
        echo "0"
-   else
-       echo "1"
+
 
 }
 
