@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 
-    case $1 in
     r) export Color="\e[31;1m" ;;
     g) export Color="\e[32;1m" ;;
     b) export Color="\e[34;1m" ;;
