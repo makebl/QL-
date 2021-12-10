@@ -10,7 +10,7 @@ function Listening {
        echo "0"
    else
        echo "1"
-   fi
+
 }
 
 #指定区间随机数
