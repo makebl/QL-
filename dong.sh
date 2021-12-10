@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
 
-TIME() {
-  [[ -z "$1" ]] && {
-    echo -ne " "
-  } || {
     case $1 in
     r) export Color="\e[31;1m" ;;
     g) export Color="\e[32;1m" ;;
