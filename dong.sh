@@ -10,24 +10,6 @@ function Listening {
        echo "0"
 
 
-}
-
-#指定区间随机数
-function random_range {
-   shuf -i $1-$2 -n1
-}
-
-#得到随机端口
-function get_random_port {
-   templ=0
-   while [ $PORT == 0 ]; do
-       temp1=`random_range $1 $2`
-       if [ `Listening $temp1` == 0 ] ; then
-              PORT=$temp1
-       fi
-   done
-   echo "port=$PORT"
-}
 
 TIME() {
   [[ -z "$1" ]] && {
