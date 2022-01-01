@@ -26,12 +26,22 @@ echo
 sleep 2
 npm config set registry https://mirrors.huaweicloud.com/repository/npm/
 npm config get registry
+latest_ver="$(wget -qO- -t1 -T2 "https://api.github.com/repos/npm/cli/releases/latest" |grep "tag_name" |head -n 1 |awk -F ":" '{print $2}' |sed 's/\"//g;s/,//g;s/ //g' |sed 's/^v//')"
+npm install -g npm
+TIME l "升级npm至${latest_ver}"
+npm install -g npm@${latest_ver} --force
+TIME l "安装yarn"
+npm install -g yarn --force
+TIME l "安装依赖date-fns"
+yarn add date-fns
+TIME l "安装依赖axios"
+yarn add axios
+TIME l "安装依赖ts-node"
+yarn add ts-node
+TIME l "安装依赖typescript"
+yarn add typescript
 TIME l "安装依赖png-js"
 npm install -g png-js
-TIME l "安装依赖date-fns"
-npm install -g date-fns
-TIME l "安装依赖axios"
-npm install -g axios
 TIME l "安装依赖crypto-js"
 npm install -g crypto-js
 TIME l "安装依赖md5"
@@ -43,13 +53,13 @@ npm install -g tslib
 TIME l "安装依赖@types/node"
 npm install -g @types/node
 TIME l "安装依赖requests"
-npm install -g requests
+pip3 install requests
 TIME l "安装依赖tough-cookie"
 npm install -g tough-cookie
 TIME l "安装依赖jsdom"
 npm install -g jsdom
 TIME l "安装依赖download"
-npm install -g download
+pip3 install download
 TIME l "安装依赖tunnel"
 npm install -g tunnel
 TIME l "安装依赖fs"
@@ -59,9 +69,12 @@ npm install -g ws
 TIME l "安装依赖js-base64"
 npm install -g js-base64
 TIME l "安装依赖jieba"
-npm install -g jieba
-TIME l "安装pnpm"
-cd /ql/scripts/ && apk add --no-cache build-base g++ cairo-dev pango-dev giflib-dev && pnpm install && pnpm i ts-node typescript @types/node date-fns axios download canvas
+pip3 install jieba
+TIME l "安装cairo-dev"
+npm install -g got
+cd /ql/scripts/ && apk add --no-cache build-base g++ cairo-dev pango-dev giflib-dev
+cd /ql
+pip3 install canvas
 cd /ql
 TIME l "安装python3"
 apk add python3 zlib-dev gcc jpeg-dev python3-dev musl-dev freetype-dev

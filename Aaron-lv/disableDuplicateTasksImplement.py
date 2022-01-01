@@ -1,11 +1,9 @@
 # -*- coding:utf-8 -*-
-
-# -*- coding:utf-8 -*-
 # 环境变量
 #1️⃣RES_SUB
 #2️⃣RES_ONLY
 #说明
-#1️⃣需保留的脚本前缀列表（不管是否重复），用 & 分割，默认保留 feverrun_my_scripts&JDHelloWorld_jd_scripts
+#1️⃣需保留的脚本前缀列表（不管是否重复），用 & 分割，默认保留 shufflewzc_faker2&JDHelloWorld_jd_scripts
 #2️⃣保留后是否禁用重复的带其他前缀脚本，默认禁用
 
 #示例
@@ -33,7 +31,7 @@ logger.addHandler(logging.StreamHandler())  # 添加控制台日志
 
 
 ip = "localhost"
-sub_str = os.getenv("RES_SUB", "feverrun_my_scripts&JDHelloWorld_jd_scripts&shufflewzc_faker2")
+sub_str = os.getenv("RES_SUB", "shufflewzc_faker2&JDHelloWorld_jd_scripts")
 sub_list = sub_str.split("&")
 res_only = os.getenv("RES_ONLY", True)
 headers = {
