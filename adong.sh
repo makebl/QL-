@@ -92,6 +92,7 @@ elif [[ "$(. /etc/openwrt_release && echo "$ID")" == "openwrt" ]]; then
   opkg install coreutils-timeout > /dev/null 2>&1
   opkg install findutils-xargs > /dev/null 2>&1
   opkg install unzip
+  export XITONG="ubuntu_os"
 else
   echo
   TIME y "本一键安装docker脚本只支持（centos、ubuntu和debian,NAS,OpenWrt）!"
