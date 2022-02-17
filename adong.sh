@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-stty erase ^H
+stty erase 
 PORT=0
 #判断当前端口是否被占用，没被占用返回0，反之1
 function Listening() {
