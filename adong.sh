@@ -294,11 +294,11 @@ else
   echo "env.properties已存在"
 fi
 
-sudo docker rm -f webapp
+docker rm -f webapp
 if [ $is_x86 == 1 ]; then
   sudo docker pull rubyangxg/jd-qinglong
 else
-  sudo docker pull rubyangxg/jd-qinglong:arm
+docker pull rubyangxg/jd-qinglong:arm
 fi
 
 ad_port1=5701
