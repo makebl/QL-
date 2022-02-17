@@ -84,7 +84,7 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
   apt-get -y update
   apt-get install -y sudo wget curl psmisc net-tools
   export XITONG="debian_os"
-elif [[ -f /etc/openwrt_release && echo "$ID")" == "openwrt" ]]; then
+elif [[ "$(. /etc/openwrt_release && echo "$ID")" == "openwrt" ]]; then
   export Aptget="opkg"
   opkg update
   opkg install git-http > /dev/null 2>&1
