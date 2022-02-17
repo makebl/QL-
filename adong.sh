@@ -84,7 +84,7 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
   apt-get -y update
   apt-get install -y sudo wget curl psmisc net-tools
   export XITONG="debian_os"
- elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
+elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
   export Aptget="opkg"
   opkg update
   opkg install git-http > /dev/null 2>&1
@@ -94,7 +94,7 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
   opkg install unzip
 else
   echo
-  TIME y "本一键安装docker脚本只支持（centos、ubuntu和debian）!"
+  TIME y "本一键安装docker脚本只支持（centos、ubuntu和debian,NAS,OpenWrt）!"
   echo
   exit 1
 fi
@@ -479,6 +479,3 @@ else
   echo "恭喜你安装完成，阿东网页：http://localhost:$ad_port1，阿东机器人登录入口：http://localhost:$port，外部访问请打开防火墙并且开放 $ad_port1 和 $port 端口！"
 fi
 
-#bash <(curl -s -L https://ghproxy.com/https://raw.githubusercontent.com/rubyangxg/jd-qinglong/master/install.sh)
-#sed -e '0,/localhost:[0-9]\+/ s/localhost:[0-9]\+/localhost:1245/' ./adbot/gmc_config.json
-#tac ./adbot/gmc_config.json | sed -e '0,/localhost:[0-9]\+/{s/localhost:[0-9]\+/localhost:1245/}' | tac | tee a.json
