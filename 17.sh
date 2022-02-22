@@ -199,7 +199,7 @@ cat > /root/Rabbit/Config/Config.json << EOF
   ]
 }
 EOF
-else
+
 fi
 
 
