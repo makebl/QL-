@@ -141,8 +141,10 @@ exit
 
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
-	docker=$(docker ps -a|grep rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
-	images=$(docker images|grep rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
+echo -e "${green}检测到已有nvjdc面板，正在删除旧的nvjdc文件容器镜像，请稍后...${plain}"
+
+	docker=$(docker ps -a|grep Rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
+	images=$(docker images|grep Rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
 	docker rm "${dockerid}"
 	docker rmi "${imagesid}"
@@ -175,7 +177,18 @@ baseip=$(curl -s ipip.ooo)  > /dev/null
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${portinfo}:5701"
 }
 
-uninstall_rabbit(){
+update_nvjdc(){
+docker pull ht944/rabbit:latest && cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 ht944/rabbit:latest
+baseip=$(curl -s ipip.ooo)  > /dev/null
+docker rm -f rabbit
+docker pull ht944/rabbit:latest
+docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 ht944/rabbit:latest
+docker update --restart=always rabbit
+echo -e "${green}rabbit更新完毕，脚本自动退出。${plain}"
+exit 0
+}
+
+uninstall_nvjdc(){
 	docker=$(docker ps -a|grep rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
 	images=$(docker images|grep rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
@@ -189,9 +202,9 @@ exit 0
 menu() {
   echo -e "\
 ${green}0.${plain} 退出脚本
-${green}1.${plain} 安装rabbit
-${green}2.${plain} 升级rabbit
-${green}3.${plain} 卸载rabbit
+${green}1.${plain} 安装nvjdc
+${green}2.${plain} 升级nvjdc
+${green}3.${plain} 卸载nvjdc
 "
 get_system_info
 echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virtual${Font_color_suffix} $arch ${Green_font_prefix}$kern${Font_color_suffix}
@@ -203,13 +216,13 @@ echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virt
     quit
     ;;
   1)
-    install_rabbit
+    install_nvjdc
     ;;
   2)
-    update_rabbit
+    update_nvjdc
     ;;	
   3)
-    uninstall_rabbit
+    uninstall_nvjdc
     ;;    
   *)
   clear
