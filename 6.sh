@@ -139,9 +139,9 @@ quit(){
 exit
 }
 
-install_nvjdc(){
+install_rabbit(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
-echo -e "${green}检测到已有nvjdc面板，正在删除旧的nvjdc文件容器镜像，请稍后...${plain}"
+echo -e "${green}检测到已有rabbit面板，正在删除旧的rabbit文件容器镜像，请稍后...${plain}"
 
 	docker=$(docker ps -a|grep Rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
 	images=$(docker images|grep Rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
