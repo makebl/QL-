@@ -174,7 +174,7 @@ cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Proj
 
 baseip=$(curl -s ipip.ooo)  > /dev/null
 
-echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${portinfo}:5701"
+echo -e "${green}安装完毕,面板访问地址：http://${baseip}:5701"
 }
 
 update_rabbit(){
