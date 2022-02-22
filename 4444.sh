@@ -158,7 +158,7 @@ fi
 rm -rf /root/Rabbit > /dev/null
 cd /root && mkdir -p  Rabbit && cd Rabbit
 cd /root/Rabbit && mkdir -p  Config
-cd /root/Rabbit/Config && wget -O Config.json  https://raw.githubusercontent.com/ht944/MadRabbit/main/Config.json
+#cd /root/Rabbit/Config && wget -O Config.json  https://raw.githubusercontent.com/ht944/MadRabbit/main/Config.json
 cd /root/Rabbit
 
 mkdir /root/Rabbit/Config/Config.json && cd /root/Rabbit/Config/Config.json
