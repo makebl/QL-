@@ -199,7 +199,6 @@ cat > /root/nvjdc/Config/Config.json << EOF
 }
 
 EOF
-else
 
 
 #判断机器是否安装docker
