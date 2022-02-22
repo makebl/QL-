@@ -141,10 +141,8 @@ exit
 
 install_nvjdc(){
 echo -e "${red}开始进行安装,请根据命令提示操作${plain}"
-echo -e "${green}检测到已有nvjdc面板，正在删除旧的nvjdc文件容器镜像，请稍后...${plain}"
-
-	docker=$(docker ps -a|grep Rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
-	images=$(docker images|grep Rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
+	docker=$(docker ps -a|grep rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
+	images=$(docker images|grep rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
 	docker rm "${dockerid}"
 	docker rmi "${imagesid}"
@@ -174,55 +172,17 @@ cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Proj
 
 baseip=$(curl -s ipip.ooo)  > /dev/null
 
-echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${portinfo}${plain}"
-}
-
-update_nvjdc(){
-mv /root/nvjdc /root/nvjdc1
-git clone https://ghproxy.com/https://github.com/shidahuilang/nvjdc.git /root/nvjdc
-cd /root/nvjdc &&  mkdir -p  Config &&  mv /root/nvjdc1/Config.json /root/nvjdc/Config/Config.json
-cd /root/nvjdc &&    mv /root/nvjdc1/.local-chromium /root/nvjdc/.local-chromium
-cd /root/nvjdc
-portinfo=$(docker port nvjdc | head -1  | sed 's/ //g' | sed 's/80\/tcp->0.0.0.0://g')
-condition=$(cat /root/nvjdc/Config/Config.json | grep -o '"XDDurl": .*' | awk -F":" '{print $1}' | sed 's/\"//g')
-AutoCaptcha1=$(cat /root/nvjdc/Config/Config.json | grep -o '"AutoCaptchaCount": .*' | awk -F":" '{print $1}' | sed 's/\"//g')
-if [ ! -n "$condition" ]; then
-read -p "是否要对接XDD，输入y或者n: " XDD && printf "\n"
-if [[ "$XDD" == "y" ]];then
-read -p "请输入XDD面板地址，格式如http://192.168.2.2:6666/api/login/smslogin : " XDDurl && printf "\n"
-read -p "请输入XDD面板Token: " XDDToken && printf "\n"
-sed -i "7a \          \"XDDurl\": \"${XDDurl}\"," /root/nvjdc/Config/Config.json
-sed -i "7a \        \"XDDToken\": \"${XDDToken}\"," /root/nvjdc/Config/Config.json
-fi
-fi
-
-if [ ! -n "$AutoCaptcha1" ];then
-	read -p "请输入自动滑块次数 直接回车默认5次后手动滑块 输入0为默认手动滑块: " AutoCaptcha && printf "\n"
-	if [ ! -n "$AutoCaptcha" ];then
-    sed -i "5a \        \"AutoCaptchaCount\": \"5\"," /root/nvjdc/Config/Config.json
-else
-    sed -i "5a \        \"AutoCaptchaCount\": \"${AutoCaptcha}\"," /root/nvjdc/Config/Config.json
-fi
-fi
-baseip=$(curl -s ipip.ooo)  > /dev/null
-docker rm -f nvjdc
-docker pull shidahuilang/nvjdc:latest
-docker run   --name nvjdc -p ${portinfo}:80 -d  -v  "$(pwd)":/app \
--v /etc/localtime:/etc/localtime:ro \
--it --privileged=true  shidahuilang/nvjdc:2.4
-docker update --restart=always nvjdc
-echo -e "${green}nvjdc更新完毕，脚本自动退出。${plain}"
-exit 0
+echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${portinfo}:5701"
 }
 
 uninstall_nvjdc(){
-	docker=$(docker ps -a|grep nvjdc) && dockerid=$(awk '{print $(1)}' <<<${docker})
-	images=$(docker images|grep nvjdc) && imagesid=$(awk '{print $(3)}' <<<${images})
+	docker=$(docker ps -a|grep rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
+	images=$(docker images|grep rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
 	docker rm "${dockerid}"
 	docker rmi "${imagesid}"
-	rm -rf nvjdc
-echo -e "${green}nvjdc面板已卸载，镜像已删除。${plain}"
+	rm -rf rabbit
+echo -e "${green}rabbit面板已卸载，镜像已删除。${plain}"
 exit 0
 }
 
