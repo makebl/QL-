@@ -200,7 +200,6 @@ cat > /root/Rabbit/Config/Config.json << EOF
 }
 EOF
 
-fi
 
 
 #拉取Rabbit镜像
