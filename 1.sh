@@ -130,7 +130,7 @@ copyright(){
     clear
 echo -e "
 —————————————————————————————————————————————————————————————
-        Nvjdc自助面板一键懒人安装脚本                         
+       Rabbit自助面板一键懒人安装脚本                         
  ${green}  	
 —————————————————————————————————————————————————————————————
 "
@@ -161,54 +161,8 @@ cd /root && mkdir -p  Rabbit && cd Rabbit
 cd /root/Rabbit && mkdir -p  Config
 cd /root/Rabbit/Config && wget -O Config.json  https://raw.githubusercontent.com/ht944/MadRabbit/main/Config.json
 cd /root/Rabbit
-mkdir /root/Rabbit/Config && cd /root/Rabbit/Config
-wget -O Config.json   https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
-read -p "请输入青龙服务器在web页面中显示的名称: " QLName && printf "\n"
-read -p "请输入Rabbit面板标题: " Title && printf "\n"
-read -p "请输入青龙QL_CLIENTID: " QL_CLIENTID && printf "\n"
-read -p "请输入青龙QL_SECRET: " QL_SECRET && printf "\n"
-read -p "请输入青龙服务器的url地址（类似http://192.168.2.2:5700）: " QLurl && printf "\n"
-cat > /root/nvjdc/Config/Config.json << EOF
-{
-  "MaxTab": "4",
-  "Title": "Rabbit",
-  "Closetime": "5",
-  "Announcement": "为提高账户的安全性，请关闭免密支付。",
-  "AutoCaptchaCount": "5",
-  "proxy": "",
-  "Config": [
-    {
-      "QLkey": 1,
-      "QLName": "腾讯云",
-      "QLurl": "",
-      "QL_CLIENTID": "",
-      "QL_SECRET": "",
-      "QL_CAPACITY": 40,
-      "QL_WSCK": 40
-    },
-    {
-      "QLkey": 2,
-      "QLName": "阿里云",
-      "QLurl": "http://xxx.xxx.xxx.xxx:5700",
-      "QL_CLIENTID": "xxx",
-      "QL_SECRET": "xxx",
-      "QL_CAPACITY": 40,
-      "QL_WSCK": 40
-    }
-  ]
-}
 
-EOF
-
-
-#判断机器是否安装docker
-if test -z "$(which docker)"; then
-echo -e "检测到系统未安装docker，开始安装docker"
-    curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun > /dev/null 2>&1 
-    curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose && ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
-fi
-
-#拉取nvjdc镜像
+#拉取Rabbit镜像
 echo -e  "${green}开始拉取rabbit镜像文件，rabbit镜像比较大，请耐心等待${plain}"
 docker pull ht944/rabbit:latest
 
