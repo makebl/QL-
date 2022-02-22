@@ -200,16 +200,6 @@ cat > /root/Rabbit/Config/Config.json << EOF
 }
 EOF
 else
-cat > /root/Rabbit/Config/Config.json << EOF
-{
-  ///浏览器最多几个网页
-  "MaxTab": "8",
-  //网站标题
-  "Title": "${title}",
-  //网站公告
-  "Announcement": "本项目脚本收集于互联网。为了您的财产安全，请关闭京东免密支付。",
-}
-EOF
 fi
 
 
