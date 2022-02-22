@@ -175,7 +175,7 @@ baseip=$(curl -s ipip.ooo)  > /dev/null
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${portinfo}:5701"
 }
 
-uninstall_nvjdc(){
+uninstall_rabbit(){
 	docker=$(docker ps -a|grep rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
 	images=$(docker images|grep rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
