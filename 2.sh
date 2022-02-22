@@ -189,9 +189,9 @@ exit 0
 menu() {
   echo -e "\
 ${green}0.${plain} 退出脚本
-${green}1.${plain} 安装nvjdc
-${green}2.${plain} 升级nvjdc
-${green}3.${plain} 卸载nvjdc
+${green}1.${plain} 安装rabbit
+${green}2.${plain} 升级rabbit
+${green}3.${plain} 卸载rabbit
 "
 get_system_info
 echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virtual${Font_color_suffix} $arch ${Green_font_prefix}$kern${Font_color_suffix}
@@ -203,13 +203,13 @@ echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virt
     quit
     ;;
   1)
-    install_nvjdc
+    install_rabbit
     ;;
   2)
-    update_nvjdc
+    update_rabbit
     ;;	
   3)
-    uninstall_nvjdc
+    uninstall_rabbit
     ;;    
   *)
   clear
