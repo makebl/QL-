@@ -177,7 +177,7 @@ baseip=$(curl -s ipip.ooo)  > /dev/null
 echo -e "${green}安装完毕,面板访问地址：http://${baseip}:${portinfo}:5701"
 }
 
-update_nvjdc(){
+update_rabbit(){
 docker pull ht944/rabbit:latest && cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 ht944/rabbit:latest
 baseip=$(curl -s ipip.ooo)  > /dev/null
 docker rm -f rabbit
@@ -188,7 +188,7 @@ echo -e "${green}rabbit更新完毕，脚本自动退出。${plain}"
 exit 0
 }
 
-uninstall_nvjdc(){
+uninstall_rabbit(){
 	docker=$(docker ps -a|grep rabbit) && dockerid=$(awk '{print $(1)}' <<<${docker})
 	images=$(docker images|grep rabbit) && imagesid=$(awk '{print $(3)}' <<<${images})
 	docker stop -t=5 "${dockerid}" > /dev/null 2>&1
@@ -202,9 +202,9 @@ exit 0
 menu() {
   echo -e "\
 ${green}0.${plain} 退出脚本
-${green}1.${plain} 安装nvjdc
-${green}2.${plain} 升级nvjdc
-${green}3.${plain} 卸载nvjdc
+${green}1.${plain} 安装rabbit
+${green}2.${plain} 升级rabbit
+${green}3.${plain} 卸载rabbit
 "
 get_system_info
 echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virtual${Font_color_suffix} $arch ${Green_font_prefix}$kern${Font_color_suffix}
@@ -216,13 +216,13 @@ echo -e "当前系统信息: ${Font_color_suffix}$opsy ${Green_font_prefix}$virt
     quit
     ;;
   1)
-    install_nvjdc
+    install_rabbit
     ;;
   2)
-    update_nvjdc
+    update_rabbit
     ;;	
   3)
-    uninstall_nvjdc
+    uninstall_rabbit
     ;;    
   *)
   clear
