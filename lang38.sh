@@ -102,21 +102,7 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
   apt-get -y update
   apt-get install -y sudo wget curl psmisc net-tools
   export XITONG="debian_os"
-  elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    opkg update
-    opkg install git-http > /dev/null 2>&1
-    opkg install ca-bundle > /dev/null 2>&1
-    opkg install coreutils-timeout > /dev/null 2>&1
-    opkg install findutils-xargs > /dev/null 2>&1
-    opkg install unzip
-    XTong="openwrt"
-    if [[ -d /opt/docker ]]; then
-      export QL_PATH="/opt"
-      export QL_Kongjian="/opt/docker"
-    elif [[ -d /mnt/mmcblk2p4/docker ]]; then
-      export QL_PATH="/root"
-      export QL_Kongjian="/mnt/mmcblk2p4/docker"
+
     exit 1
   fi
 }
