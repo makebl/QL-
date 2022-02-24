@@ -186,14 +186,14 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
   export Aptget="yum"
   yum -y update
   yum install -y sudo wget curl psmisc net-tools
-  export XITONG="cent_os"
+  #export XITONG="cent_os"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-  export Aptget="apt-get"
+  #export Aptget="apt-get"
   apt-get -y update
   apt-get install -y sudo wget curl psmisc net-tools
-  export XITONG="ubuntu_os"
+  #export XITONG="ubuntu_os"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
@@ -203,14 +203,12 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
   export XITONG="debian_os"
 elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    export QL_PATH="/opt"
-  export Aptget="opkg"
-  opkg update
-  opkg install git-http > /dev/null 2>&1
-  opkg install ca-bundle > /dev/null 2>&1
-  opkg install coreutils-timeout > /dev/null 2>&1
-  opkg install findutils-xargs > /dev/null 2>&1
-  opkg install unzip
+    opkg update
+    opkg install git-http > /dev/null 2>&1
+    opkg install ca-bundle > /dev/null 2>&1
+    opkg install coreutils-timeout > /dev/null 2>&1
+    opkg install findutils-xargs > /dev/null 2>&1
+    opkg install unzip
     XTong="openwrt"
     if [[ -d /opt/docker ]]; then
       export QL_PATH="/opt"
