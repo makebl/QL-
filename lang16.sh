@@ -186,9 +186,7 @@ function qinglong_port() {
 }
 
 if [[ $synology == 1 ]]; then
-  echo
-  TIME y "你是群晖nas"
-  echo
+
 elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
   export Aptget="yum"
   yum -y update
