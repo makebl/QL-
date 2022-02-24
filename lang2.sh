@@ -180,38 +180,38 @@ if [[ $synology == 1 ]]; then
   echo
   TIME y "你是群晖nas"
   echo
-    elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    yum -y install sudo wget git unzip net-tools.x86_64 subversion
-    export Aptget="yum"
-    yum -y update
-    yum install -y sudo wget curl psmisc net-tools
+  export Aptget="yum"
+  yum -y update
+  yum install -y sudo wget curl psmisc net-tools
   export XITONG="cent_os"
-    
-   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    apt-get -y update
-    apt-get -y install sudo wget git unzip net-tools subversion
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+  export Aptget="apt-get"
+  apt-get -y update
+  apt-get install -y sudo wget curl psmisc net-tools
+  export XITONG="ubuntu_os"
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    apt -y update
-    apt -y install sudo wget git unzip net-tools subversion
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+  export Aptget="apt"
+  apt-get -y update
+  apt-get install -y sudo wget curl psmisc net-tools
+  export XITONG="debian_os"
+elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    apk update
-    apk add sudo wget git unzip net-tools subversion
-  elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    opkg update
-    opkg install git-http > /dev/null 2>&1
-    opkg install ca-bundle > /dev/null 2>&1
-    opkg install coreutils-timeout > /dev/null 2>&1
-    opkg install findutils-xargs > /dev/null 2>&1
-    opkg install unzip
+  export Aptget="opkg"
+  opkg update
+  opkg install git-http > /dev/null 2>&1
+  opkg install ca-bundle > /dev/null 2>&1
+  opkg install coreutils-timeout > /dev/null 2>&1
+  opkg install findutils-xargs > /dev/null 2>&1
+  opkg install unzip
+else
     XTong="openwrt"
     if [[ -d /opt/docker ]]; then
       export QL_PATH="/opt"
