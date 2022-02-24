@@ -184,7 +184,7 @@ function qinglong_port() {
   ;;
   esac
 }
-
+function system_check() {
 if [[ $synology == 1 ]]; then
 echo
 elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
