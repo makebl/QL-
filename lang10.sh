@@ -185,7 +185,6 @@ if [[ $synology == 1 ]]; then
   echo
   TIME y "你是群晖nas"
   echo
-if [[ $synology == 1 ]]; then
 elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
