@@ -188,7 +188,10 @@ function system_check() {
   if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    yum -y install sudo wget git unzip net-tools.x86_64 subversion
+  export Aptget="yum"
+  yum -y update
+  yum install -y sudo wget curl psmisc net-tools
+  export XITONG="cent_os"
   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
