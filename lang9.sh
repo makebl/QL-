@@ -18,6 +18,11 @@ RedBG="\033[41;37m"
 OK="${Green}[OK]${Font}"
 ERROR="${Red}[ERROR]${Font}"
 
+synology=0
+if [[ $(uname -a) == *synology* ]]; then
+  synology=1
+fi
+
 function print_ok() {
   echo
   echo -e " ${OK} ${Blue} $1 ${Font}"
