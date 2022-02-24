@@ -114,7 +114,6 @@ elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
   opkg install unzip
 else
 
-}
 
 function kaiqiroot_ssh() {
   if [[ ! -f /etc/openwrt_release ]] && [[ ! -f /rom/etc/openwrt_release ]]; then
