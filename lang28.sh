@@ -113,6 +113,8 @@ elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
   opkg install findutils-xargs > /dev/null 2>&1
   opkg install unzip
 else
+  fi
+}
 
 
 function kaiqiroot_ssh() {
