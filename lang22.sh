@@ -85,6 +85,64 @@ if [[ ! "$USER" == "root" ]]; then
   exit 1
 fi
 
+if [[ $synology == 1 ]]; then
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
+    export QL_PATH="/opt"
+  export Aptget="yum"
+  yum -y update
+  yum install -y sudo wget curl psmisc net-tools
+  export XITONG="cent_os"
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
+    export QL_PATH="/opt"
+    apt-get -y update
+    apt-get -y install sudo wget git unzip net-tools subversion
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
+    export QL_PATH="/opt"
+    apt -y update
+    apt -y install sudo wget git unzip net-tools subversion
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
+    export QL_PATH="/opt"
+    apk update
+    apk add sudo wget git unzip net-tools subversion
+  elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
+    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
+    opkg update
+    opkg install git-http > /dev/null 2>&1
+    opkg install ca-bundle > /dev/null 2>&1
+    opkg install coreutils-timeout > /dev/null 2>&1
+    opkg install findutils-xargs > /dev/null 2>&1
+    opkg install unzip
+    XTong="openwrt"
+    if [[ -d /opt/docker ]]; then
+      export QL_PATH="/opt"
+      export QL_Kongjian="/opt/docker"
+    elif [[ -d /mnt/mmcblk2p4/docker ]]; then
+      export QL_PATH="/root"
+      export QL_Kongjian="/mnt/mmcblk2p4/docker"
+    else
+      print_error "没找到/opt/docker或者/mnt/mmcblk2p4/docker"
+      exit 1
+    fi
+  else
+    print_error "不支持您的系统"
+    exit 1
+  fi
+}
+
+function kaiqiroot_ssh() {
+  if [[ ! -f /etc/openwrt_release ]] && [[ ! -f /rom/etc/openwrt_release ]]; then
+    echo
+    ECHOGG "开启root用户ssh，方便使用工具连接服务器直接修改文件代码"
+    bash -c "$(curl -fsSL ${curlurl}/ssh.sh)"
+    judge "开启root用户ssh"
+    sleep 3
+  fi
+}
+
 export Current="$PWD"
 
 function qinglong_port() {
@@ -184,63 +242,7 @@ function qinglong_port() {
   ;;
   esac
 }
-function system_check() {
-  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    export QL_PATH="/opt"
-  export Aptget="yum"
-  yum -y update
-  yum install -y sudo wget curl psmisc net-tools
-  export XITONG="cent_os"
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    export QL_PATH="/opt"
-    apt-get -y update
-    apt-get -y install sudo wget git unzip net-tools subversion
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    export QL_PATH="/opt"
-    apt -y update
-    apt -y install sudo wget git unzip net-tools subversion
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    export QL_PATH="/opt"
-    apk update
-    apk add sudo wget git unzip net-tools subversion
-  elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    opkg update
-    opkg install git-http > /dev/null 2>&1
-    opkg install ca-bundle > /dev/null 2>&1
-    opkg install coreutils-timeout > /dev/null 2>&1
-    opkg install findutils-xargs > /dev/null 2>&1
-    opkg install unzip
-    XTong="openwrt"
-    if [[ -d /opt/docker ]]; then
-      export QL_PATH="/opt"
-      export QL_Kongjian="/opt/docker"
-    elif [[ -d /mnt/mmcblk2p4/docker ]]; then
-      export QL_PATH="/root"
-      export QL_Kongjian="/mnt/mmcblk2p4/docker"
-    else
-      print_error "没找到/opt/docker或者/mnt/mmcblk2p4/docker"
-      exit 1
-    fi
-  else
-    print_error "不支持您的系统"
-    exit 1
-  fi
-}
 
-function kaiqiroot_ssh() {
-  if [[ ! -f /etc/openwrt_release ]] && [[ ! -f /rom/etc/openwrt_release ]]; then
-    echo
-    ECHOGG "开启root用户ssh，方便使用工具连接服务器直接修改文件代码"
-    bash -c "$(curl -fsSL ${curlurl}/ssh.sh)"
-    judge "开启root用户ssh"
-    sleep 3
-  fi
-}
 
 
 
