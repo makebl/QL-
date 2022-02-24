@@ -127,13 +127,6 @@ if [[ $synology == 1 ]]; then
       export QL_PATH="/root"
       export QL_Kongjian="/mnt/mmcblk2p4/docker"
     else
-      print_error "没找到/opt/docker或者/mnt/mmcblk2p4/docker"
-      exit 1
-    fi
-  else
-    print_error "不支持您的系统"
-    exit 1
-  fi
 }
 
 function kaiqiroot_ssh() {
