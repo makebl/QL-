@@ -91,9 +91,7 @@ if [[ $synology == 1 ]]; then
   TIME y "你是群晖nas"
   echo
 elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-  export Aptget="yum"
 yum -y install sudo wget git unzip net-tools.x86_64 subversion
-  export XITONG="cent_os"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
   export Aptget="apt-get"
   apt-get -y update
