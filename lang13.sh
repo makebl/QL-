@@ -1158,5 +1158,5 @@ elif [[ `docker images | grep -c "qinglong"` -ge '1' ]] && [[ -f ${rwwc} ]]; the
   memuqinglong "$@"
 else
   memu "$@"
-fi
+echo
 
