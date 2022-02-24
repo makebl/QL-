@@ -211,7 +211,6 @@ elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
   opkg install coreutils-timeout > /dev/null 2>&1
   opkg install findutils-xargs > /dev/null 2>&1
   opkg install unzip
-else
     XTong="openwrt"
     if [[ -d /opt/docker ]]; then
       export QL_PATH="/opt"
