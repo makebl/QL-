@@ -188,9 +188,8 @@ if [[ $synology == 1 ]]; then
     yum -y update
     yum install -y sudo wget curl psmisc net-tools
   export XITONG="cent_os"
-    elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+   elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
     apt-get -y update
