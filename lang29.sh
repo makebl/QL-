@@ -85,6 +85,7 @@ if [[ ! "$USER" == "root" ]]; then
   exit 1
 fi
 
+function system_check() {
 if [[ $synology == 1 ]]; then
   echo
   TIME y "你是群晖nas"
@@ -113,7 +114,7 @@ elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
   opkg install findutils-xargs > /dev/null 2>&1
   opkg install unzip
 else
-  fi
+
 }
 
 
