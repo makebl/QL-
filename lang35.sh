@@ -119,7 +119,8 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
     elif [[ -d /mnt/mmcblk2p4/docker ]]; then
       export QL_PATH="/root"
       export QL_Kongjian="/mnt/mmcblk2p4/docker"
-fi
+  fi
+}
 
 
 export Current="$PWD"
