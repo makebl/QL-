@@ -112,18 +112,7 @@ check_dependencies(){
     InstallMethod="brew"  
   fi
 }
-check_dependencies
-#安装wget、curl、unzip
-${InstallMethod} install unzip wget curl -y > /dev/null 2>&1 
-get_opsy() {
-  [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
-  [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
-  [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
-}
-virt_check() {
-  # if hash ifconfig 2>/dev/null; then
-  # eth=$(ifconfig)
-  # fi
+
 
   virtualx=$(dmesg) 2>/dev/null
 
