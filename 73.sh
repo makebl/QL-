@@ -80,38 +80,7 @@ if [[ ! "$USER" == "root" ]]; then
   exit 1
 fi
 
-checkos(){
-  ifTermux=$(echo $PWD | grep termux)
-  ifMacOS=$(uname -a | grep Darwin)
-  if [ -n "$ifTermux" ];then
-    os_version=Termux
-  elif [ -n "$ifMacOS" ];then
-    os_version=MacOS  
-  else  
-    os_version=$(grep 'VERSION_ID' /etc/os-release | cut -d '"' -f 2 | tr -d '.')
-  fi
-  
-  if [[ "$os_version" == "2004" ]] || [[ "$os_version" == "10" ]] || [[ "$os_version" == "11" ]];then
-    ssll="-k --ciphers DEFAULT@SECLEVEL=1"
-  fi
-}
 
-
-
-checkCPU
-check_dependencies(){
-
-  os_detail=$(cat /etc/os-release 2> /dev/null)
-  if_debian=$(echo $os_detail | grep 'ebian')
-  if_redhat=$(echo $os_detail | grep 'rhel')
-  if [ -n "$if_debian" ];then
-    InstallMethod="apt"
-  elif [ -n "$if_redhat" ] && [[ "$os_version" -lt 8 ]];then
-    InstallMethod="yum"
-  elif [[ "$os_version" == "MacOS" ]];then
-    InstallMethod="brew"  
-  fi
-}
 
 
 
