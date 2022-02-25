@@ -181,7 +181,6 @@ function qinglong_port() {
 }
 
 function system_check() {
-
 elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
   export Aptget="yum"
   yum -y update
