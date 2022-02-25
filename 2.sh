@@ -215,9 +215,7 @@ function system_check() {
       exit 1
     fi
   else
-    print_error "不支持您的系统"
-    exit 1
-  fi
+
 }
 
 function kaiqiroot_ssh() {
