@@ -182,29 +182,9 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
    apt-get install git -y > /dev/null
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
    apt install git -y > /dev/null
-      elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    export QL_PATH="/opt"
-    apk update
-    apk add sudo wget git unzip net-tools subversion
-  elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    opkg update
-    opkg install git-http > /dev/null 2>&1
-    opkg install ca-bundle > /dev/null 2>&1
-    opkg install coreutils-timeout > /dev/null 2>&1
-    opkg install findutils-xargs > /dev/null 2>&1
-    opkg install unzip
-    XTong="openwrt"
-    elif [[ -d /opt/docker ]]; then
-      export QL_PATH="/opt"
-      export QL_Kongjian="/opt/docker"
-    elif [[ -d /mnt/mmcblk2p4/docker ]]; then
-      export QL_PATH="/root"
-      export QL_Kongjian="/mnt/mmcblk2p4/docker"
-      
-      fi
+fi
     exit 1
+
 }
 
 function kaiqiroot_ssh() {
