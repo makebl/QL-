@@ -178,11 +178,10 @@ function qinglong_port() {
 function system_check() {
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
    yum install git -y > /dev/null
-elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
    apt-get install git -y > /dev/null
-elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
    apt install git -y > /dev/null
-fi
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
