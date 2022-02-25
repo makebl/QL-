@@ -181,8 +181,8 @@ function qinglong_port() {
 }
 
 function system_check() {
-  if [[ "$(. /etc/os-release && echo "$ID")" == "synology" ]]; then
-  export QL_PATH="/volume1"
+  if [[ $synology == 1 ]]; then
+  #export QL_PATH="/volume1"
    ipkg update
    ipkg install sudo wget git unzip net-tools subversion
   elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
