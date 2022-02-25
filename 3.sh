@@ -213,8 +213,7 @@ function system_check() {
     else
       print_error "没找到/opt/docker或者/mnt/mmcblk2p4/docker"
       exit 1
-    fi
-  else
+
 
 }
 
