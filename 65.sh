@@ -183,8 +183,8 @@ function qinglong_port() {
 function system_check() {
   if [[ $synology == 1 ]]; then
   export QL_PATH="/opt"
-  ipkg update
-  ipkg install sudo wget git unzip net-tools subversion
+   ipkg update
+   ipkg install sudo wget git unzip net-tools subversion
   elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
@@ -260,36 +260,7 @@ function system_docker() {
   fi
 }
 
-function systemctl_status() {
-  echo
-  if [[ "${XTong}" == "openwrt" ]]; then
-    /etc/init.d/dockerman start > /dev/null 2>&1
-    /etc/init.d/dockerd start > /dev/null 2>&1
-    sleep 3
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    service docker start > /dev/null 2>&1
-    sleep 1
-    if [[ `docker version |grep -c "runc"` == '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
-  else
-    systemctl start docker > /dev/null 2>&1
-    sleep 1
-    echo
-    ECHOGG "检测docker是否在运行"
-    if [[ `systemctl status docker |grep -c "active (running) "` == '1' ]]; then
-      print_ok "docker正在运行中!"
-    else
-      print_error "docker没有启动，请先启动docker，或者检查一下是否安装失败"
-      sleep 1
-      exit 1
-    fi
-  fi
-}
+
 
 function uninstall_qinglong() {
   if [[ `docker images | grep -c "qinglong"` -ge '1' ]] || [[ `docker ps -a | grep -c "qinglong"` -ge '1' ]]; then
