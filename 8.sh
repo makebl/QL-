@@ -210,7 +210,6 @@ function system_check() {
     elif [[ -d /mnt/mmcblk2p4/docker ]]; then
       export QL_PATH="/root"
       export QL_Kongjian="/mnt/mmcblk2p4/docker"
-
   fi
 }
 
