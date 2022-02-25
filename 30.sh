@@ -175,156 +175,14 @@ function qinglong_port() {
   esac
 }
 
-checkos(){
-  ifTermux=$(echo $PWD | grep termux)
-  ifMacOS=$(uname -a | grep Darwin)
-  if [ -n "$ifTermux" ];then
-    os_version=Termux
-  elif [ -n "$ifMacOS" ];then
-    os_version=MacOS  
-  else  
-    os_version=$(grep 'VERSION_ID' /etc/os-release | cut -d '"' -f 2 | tr -d '.')
-  fi
-  
-  if [[ "$os_version" == "2004" ]] || [[ "$os_version" == "10" ]] || [[ "$os_version" == "11" ]];then
-    ssll="-k --ciphers DEFAULT@SECLEVEL=1"
-  fi
-}
-checkos 
-
-checkCPU(){
-  CPUArch=$(uname -m)
-  if [[ "$CPUArch" == "aarch64" ]];then
-    arch=linux_arm64
-  elif [[ "$CPUArch" == "i686" ]];then
-    arch=linux_386
-  elif [[ "$CPUArch" == "arm" ]];then
-    arch=linux_arm
-  elif [[ "$CPUArch" == "x86_64" ]] && [ -n "$ifMacOS" ];then
-    arch=darwin_amd64
-  elif [[ "$CPUArch" == "x86_64" ]];then
-    arch=linux_amd64    
-  fi
-}
-checkCPU
-check_dependencies(){
-
-  os_detail=$(cat /etc/os-release 2> /dev/null)
-  if_debian=$(echo $os_detail | grep 'ebian')
-  if_redhat=$(echo $os_detail | grep 'rhel')
-  if [ -n "$if_debian" ];then
-    InstallMethod="apt"
-  elif [ -n "$if_redhat" ] && [[ "$os_version" -lt 8 ]];then
-    InstallMethod="yum"
-  elif [[ "$os_version" == "MacOS" ]];then
-    InstallMethod="brew"  
-  fi
-}
-check_dependencies
-#安装wget、curl、unzip
-${InstallMethod} install unzip wget curl -y > /dev/null 2>&1 
-get_opsy() {
-  [ -f /etc/redhat-release ] && awk '{print ($1,$3~/^[0-9]/?$3:$4)}' /etc/redhat-release && return
-  [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
-  [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
-}
-virt_check() {
-  # if hash ifconfig 2>/dev/null; then
-  # eth=$(ifconfig)
-  # fi
-
-  virtualx=$(dmesg) 2>/dev/null
-
-  if [[ $(which dmidecode) ]]; then
-    sys_manu=$(dmidecode -s system-manufacturer) 2>/dev/null
-    sys_product=$(dmidecode -s system-product-name) 2>/dev/null
-    sys_ver=$(dmidecode -s system-version) 2>/dev/null
-  else
-    sys_manu=""
-    sys_product=""
-    sys_ver=""
-  fi
-
-  if grep docker /proc/1/cgroup -qa; then
-    virtual="Docker"
-  elif grep lxc /proc/1/cgroup -qa; then
-    virtual="Lxc"
-  elif grep -qa container=lxc /proc/1/environ; then
-    virtual="Lxc"
-  elif [[ -f /proc/user_beancounters ]]; then
-    virtual="OpenVZ"
-  elif [[ "$virtualx" == *kvm-clock* ]]; then
-    virtual="KVM"
-  elif [[ "$cname" == *KVM* ]]; then
-    virtual="KVM"
-  elif [[ "$cname" == *QEMU* ]]; then
-    virtual="KVM"
-  elif [[ "$virtualx" == *"VMware Virtual Platform"* ]]; then
-    virtual="VMware"
-  elif [[ "$virtualx" == *"Parallels Software International"* ]]; then
-    virtual="Parallels"
-  elif [[ "$virtualx" == *VirtualBox* ]]; then
-    virtual="VirtualBox"
-  elif [[ -e /proc/xen ]]; then
-    virtual="Xen"
-  elif [[ "$sys_manu" == *"Microsoft Corporation"* ]]; then
-    if [[ "$sys_product" == *"Virtual Machine"* ]]; then
-      if [[ "$sys_ver" == *"7.0"* || "$sys_ver" == *"Hyper-V" ]]; then
-        virtual="Hyper-V"
-      else
-        virtual="Microsoft Virtual Machine"
-      fi
-    fi
-  else
-    virtual="Dedicated母鸡"
-  fi
-}
-
-get_system_info() {
-  cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  opsy=$(get_opsy)
-  arch=$(uname -m)
-
-  kern=$(uname -r)
-
-  virt_check
-}
-copyright(){
-    clear
-echo -e "
-
 function system_check() {
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
    yum install git -y > /dev/null
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
    apt-get install git -y > /dev/null
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
    apt install git -y > /dev/null
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    export QL_PATH="/opt"
-    apk update
-    apk add sudo wget git unzip net-tools subversion
-  elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    ECHOG "正在安装宿主机所需要的依赖，请稍后..."
-    opkg update
-    opkg install git-http > /dev/null 2>&1
-    opkg install ca-bundle > /dev/null 2>&1
-    opkg install coreutils-timeout > /dev/null 2>&1
-    opkg install findutils-xargs > /dev/null 2>&1
-    opkg install unzip
-    XTong="openwrt"
-    if [[ -d /opt/docker ]]; then
-      export QL_PATH="/opt"
-      export QL_Kongjian="/opt/docker"
-    elif [[ -d /mnt/mmcblk2p4/docker ]]; then
-      export QL_PATH="/root"
-      export QL_Kongjian="/mnt/mmcblk2p4/docker"
-    else
-      print_error "没找到/opt/docker或者/mnt/mmcblk2p4/docker"
-      exit 1
-    fi
-  else
+fi
     exit 1
   fi
 }
@@ -1159,7 +1017,7 @@ if [[ `docker images |grep -c "qinglong"` -ge '1' ]] && [[ `docker images |grep 
   memunvjdc "$@"
 elif [[ `docker images | grep -c "qinglong"` -ge '1' ]] && [[ -f ${rwwc} ]]; then
   memuqinglong "$@"
-
+else
   memu "$@"
-
+fi
 
