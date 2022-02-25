@@ -228,6 +228,70 @@ get_opsy() {
   [ -f /etc/os-release ] && awk -F'[= "]' '/PRETTY_NAME/{print $3,$4,$5}' /etc/os-release && return
   [ -f /etc/lsb-release ] && awk -F'[="]+' '/DESCRIPTION/{print $2}' /etc/lsb-release && return
 }
+virt_check() {
+  # if hash ifconfig 2>/dev/null; then
+  # eth=$(ifconfig)
+  # fi
+
+  virtualx=$(dmesg) 2>/dev/null
+
+  if [[ $(which dmidecode) ]]; then
+    sys_manu=$(dmidecode -s system-manufacturer) 2>/dev/null
+    sys_product=$(dmidecode -s system-product-name) 2>/dev/null
+    sys_ver=$(dmidecode -s system-version) 2>/dev/null
+  else
+    sys_manu=""
+    sys_product=""
+    sys_ver=""
+  fi
+
+  if grep docker /proc/1/cgroup -qa; then
+    virtual="Docker"
+  elif grep lxc /proc/1/cgroup -qa; then
+    virtual="Lxc"
+  elif grep -qa container=lxc /proc/1/environ; then
+    virtual="Lxc"
+  elif [[ -f /proc/user_beancounters ]]; then
+    virtual="OpenVZ"
+  elif [[ "$virtualx" == *kvm-clock* ]]; then
+    virtual="KVM"
+  elif [[ "$cname" == *KVM* ]]; then
+    virtual="KVM"
+  elif [[ "$cname" == *QEMU* ]]; then
+    virtual="KVM"
+  elif [[ "$virtualx" == *"VMware Virtual Platform"* ]]; then
+    virtual="VMware"
+  elif [[ "$virtualx" == *"Parallels Software International"* ]]; then
+    virtual="Parallels"
+  elif [[ "$virtualx" == *VirtualBox* ]]; then
+    virtual="VirtualBox"
+  elif [[ -e /proc/xen ]]; then
+    virtual="Xen"
+  elif [[ "$sys_manu" == *"Microsoft Corporation"* ]]; then
+    if [[ "$sys_product" == *"Virtual Machine"* ]]; then
+      if [[ "$sys_ver" == *"7.0"* || "$sys_ver" == *"Hyper-V" ]]; then
+        virtual="Hyper-V"
+      else
+        virtual="Microsoft Virtual Machine"
+      fi
+    fi
+  else
+    virtual="Dedicated母鸡"
+  fi
+}
+}
+get_system_info() {
+  cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
+  opsy=$(get_opsy)
+  arch=$(uname -m)
+
+  kern=$(uname -r)
+
+  virt_check
+}
+copyright(){
+    clear
+echo -e "
 
 function system_check() {
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
