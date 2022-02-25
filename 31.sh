@@ -184,7 +184,7 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
    apt install git -y > /dev/null
 fi
     exit 1
-  fi
+
 }
 
 function kaiqiroot_ssh() {
