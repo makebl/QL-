@@ -180,7 +180,7 @@ if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
    yum install git -y > /dev/null
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
    apt-get install git -y > /dev/null
-elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" ]]; then
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
    apt install git -y > /dev/null
 fi
     exit 1
