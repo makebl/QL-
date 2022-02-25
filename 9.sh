@@ -176,21 +176,21 @@ function qinglong_port() {
 }
 
 function system_check() {
-  if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
     yum -y install sudo wget git unzip net-tools.x86_64 subversion
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
+elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
     apt-get -y update
     apt-get -y install sudo wget git unzip net-tools subversion
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
+elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
     apt -y update
     apt -y install sudo wget git unzip net-tools subversion
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+      elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
     apk update
@@ -210,7 +210,10 @@ function system_check() {
     elif [[ -d /mnt/mmcblk2p4/docker ]]; then
       export QL_PATH="/root"
       export QL_Kongjian="/mnt/mmcblk2p4/docker"
-  fi
+    else
+fi
+    exit 1
+
 }
 
 function kaiqiroot_ssh() {
