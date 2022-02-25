@@ -84,18 +84,6 @@ fi
 
 
 
-get_system_info() {
-  cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
-  opsy=$(get_opsy)
-  arch=$(uname -m)
-
-  kern=$(uname -r)
-
-  virt_check
-}
-copyright(){
-    clear
-echo -e "
 
 
 export Current="$PWD"
