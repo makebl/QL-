@@ -175,13 +175,33 @@ function qinglong_port() {
   esac
 }
 
-function system_check() {
-if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
-   yum install git -y > /dev/null
+if [[ $synology == 1 ]]; then
+  echo
+  TIME y "你是群晖nas"
+  echo
+elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+  export Aptget="yum"
+  yum -y update
+  yum install -y sudo wget curl psmisc net-tools
+  export XITONG="cent_os"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
-   apt-get install git -y > /dev/null
+  export Aptget="apt-get"
+  apt-get -y update
+  apt-get install -y sudo wget curl psmisc net-tools
+  export XITONG="ubuntu_os"
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
-   apt install git -y > /dev/null
+  export Aptget="apt"
+  apt-get -y update
+  apt-get install -y sudo wget curl psmisc net-tools
+  export XITONG="debian_os"
+elif [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
+  export Aptget="opkg"
+  opkg update
+  opkg install git-http > /dev/null 2>&1
+  opkg install ca-bundle > /dev/null 2>&1
+  opkg install coreutils-timeout > /dev/null 2>&1
+  opkg install findutils-xargs > /dev/null 2>&1
+  opkg install unzip
 fi
     exit 1
 
