@@ -1159,7 +1159,7 @@ if [[ `docker images |grep -c "qinglong"` -ge '1' ]] && [[ `docker images |grep 
   memunvjdc "$@"
 elif [[ `docker images | grep -c "qinglong"` -ge '1' ]] && [[ -f ${rwwc} ]]; then
   memuqinglong "$@"
-else
+
   memu "$@"
-fi
+
 
