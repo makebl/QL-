@@ -211,10 +211,8 @@ function system_check() {
       export QL_PATH="/root"
       export QL_Kongjian="/mnt/mmcblk2p4/docker"
     else
-      print_error "没找到/opt/docker或者/mnt/mmcblk2p4/docker"
+
       exit 1
-
-
 }
 
 function kaiqiroot_ssh() {
