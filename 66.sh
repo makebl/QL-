@@ -182,7 +182,7 @@ function qinglong_port() {
 
 function system_check() {
   if [[ $synology == 1 ]]; then
-  export QL_PATH="/opt"
+  export QL_PATH="/volume1/@docker"
    ipkg update
    ipkg install sudo wget git unzip net-tools subversion
   elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
