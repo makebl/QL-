@@ -279,7 +279,7 @@ virt_check() {
     virtual="Dedicated母鸡"
   fi
 }
-}
+
 get_system_info() {
   cname=$(awk -F: '/model name/ {name=$2} END {print name}' /proc/cpuinfo | sed 's/^[ \t]*//;s/[ \t]*$//')
   opsy=$(get_opsy)
