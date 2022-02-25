@@ -212,11 +212,8 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
       export QL_Kongjian="/mnt/mmcblk2p4/docker"
 
     else
-      print_error "没找到/opt/docker或者/mnt/mmcblk2p4/docker"
-      exit 1
-    fi
-  else
-    print_error "不支持您的系统"
+
+
     exit 1
   fi
 }
