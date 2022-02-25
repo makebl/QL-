@@ -179,16 +179,14 @@ function system_check() {
 if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    yum -y install sudo wget git unzip net-tools.x86_64 subversion
+     yum install git -y > /dev/null
 elif [[ "$(. /etc/os-release && echo "$ID")" == "ubuntu" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    apt-get -y update
     apt-get -y install sudo wget git unzip net-tools subversion
 elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release && echo "$ID")" == "Deepin" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
     export QL_PATH="/opt"
-    apt update
     apt install git -y > /dev/null
       elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     ECHOG "正在安装宿主机所需要的依赖，请稍后..."
