@@ -212,7 +212,7 @@ function system_check() {
       export QL_Kongjian="/mnt/mmcblk2p4/docker"
     else
 
-      exit 1
+  fi
 }
 
 function kaiqiroot_ssh() {
