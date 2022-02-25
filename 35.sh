@@ -180,6 +180,7 @@ function qinglong_port() {
   esac
 }
 
+function system_check() {
 if [[ $synology == 1 ]]; then
   echo
   TIME y "你是群晖nas"
