@@ -181,7 +181,7 @@ function qinglong_port() {
 }
 
 function system_check() {
-elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
   export Aptget="yum"
   yum -y update
   yum install -y sudo wget curl psmisc net-tools
