@@ -181,7 +181,11 @@ function qinglong_port() {
 }
 
 function system_check() {
-if [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
+if [[ $synology == 1 ]]; then
+  echo
+  TIME y "群晖nas"
+  echo
+elif [[ "$(. /etc/os-release && echo "$ID")" == "centos" ]]; then
   export Aptget="yum"
   yum -y update
   yum install -y sudo wget curl psmisc net-tools
