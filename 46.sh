@@ -204,7 +204,7 @@ elif [[ "$(. /etc/os-release && echo "$ID")" == "debian" || "$(. /etc/os-release
     opkg install findutils-xargs > /dev/null 2>&1
     opkg install unzip
     XTong="openwrt"
-    if [[ -d /opt/docker ]]; then
+    elif [[ -d /opt/docker ]]; then
       export QL_PATH="/opt"
       export QL_Kongjian="/opt/docker"
     elif [[ -d /mnt/mmcblk2p4/docker ]]; then
