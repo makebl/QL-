@@ -142,7 +142,7 @@ function qinglong_port() {
      read -p " 请输入通过rabbit面板验证最大挂机数(直接回车默认：99): " CAPACITY && printf "\n"
      export CAPACITY=${CAPACITY:-"99"}
      #echo -e "\033[32m pushplus网址：http://www.pushplus.plus \033[0m"
-     #read -p " 输入pushplus的TOKEN，有人通过nvjdc面板进入挂机或删除KEY时通知您(直接回车默认不通知): " PUSHPLUS && printf "\n"
+     #read -p " 输入pushplus的TOKEN，有人通过rabbit面板进入挂机或删除KEY时通知您(直接回车默认不通知): " PUSHPLUS && printf "\n"
      #export PUSHPLUS=${PUSHPLUS:-""}
      export QLurl="http://${IP}:${QL_PORT}"
      if [[ -z ${PUSHPLUS} ]]; then
@@ -157,11 +157,11 @@ function qinglong_port() {
   ECHOGG "您的青龙登录地址将为：http://${IP}:${QL_PORT}"
   if [[ "${Api_Client}" == "true" ]]; then
     echo
-    ECHOYY "nvjdc面板名称为：${NVJDCNAME}"
-    ECHOYY "nvjdc面板端口为：${JDC_PORT}"
-    ECHOYY "通过nvjdc面板验证最大挂机数为：${CAPACITY}"
+    ECHOYY "rabbit面板名称为：${rabbitNAME}"
+    ECHOYY "rabbit面板端口为：${JDC_PORT}"
+    ECHOYY "通过rabbit面板验证最大挂机数为：${CAPACITY}"
     ECHOYY "pushplus的TOKEN为：${PUSHP}"
-    ECHOYY "您的nvjdc登录地址将为：http://${IP}:${JDC_PORT}"
+    ECHOYY "您的rabbit登录地址将为：http://${IP}:${JDC_PORT}"
   fi
   echo
   read -p " 检查是否正确,正确则按回车继续,不正确输入[Q/q]回车重新输入： " NNRT
@@ -315,14 +315,14 @@ function sys_kongjian() {
     Available="$(df -h | grep "${QL_Kongjian}" | awk '{print $4}' | awk 'NR==1')"
     FINAL=`echo ${Available: -1}`
     if [[ "${FINAL}" =~ (M|K) ]]; then
-      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_nvjdc}，请挂载大点磁盘空间容量"
+      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_rabbit}，请挂载大点磁盘空间容量"
       exit 1
     fi
       Overlay_Available="$(df -h | grep "${QL_Kongjian}" | awk '{print $4}' | awk 'NR==1' | sed 's/.$//g')"
       Kongjian="$(awk -v num1=${Overlay_Available} -v num2=${Sys_kj} 'BEGIN{print(num1>num2)?"0":"1"}')"
       ECHOY "您当前系统可用空间为${Overlay_Available}G"
     if [[ "${Kongjian}" == "1" ]];then
-      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_nvjdc}，请挂载大点磁盘空间容量"
+      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_rabbit}，请挂载大点磁盘空间容量"
       sleep 1
       exit 1
     fi
@@ -330,7 +330,7 @@ function sys_kongjian() {
     Ubunkj="$(df -h|grep -v tmpfs |grep "/dev/.*" |awk '{print $4}' |awk 'NR==1')"
     FINAL=`echo ${Ubunkj: -1}`
     if [[ "${FINAL}" =~ (M|K) ]]; then
-      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_nvjdc}，请加大磁盘空间容量"
+      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_rabbit}，请加大磁盘空间容量"
       sleep 1
       exit 1
     fi
@@ -338,7 +338,7 @@ function sys_kongjian() {
     Kongjian="$(awk -v num1=${Ubuntu_kj} -v num2=${Sys_kj} 'BEGIN{print(num1>num2)?"0":"1"}')"
     ECHOY "您当前系统可用空间为${Ubuntu_kj}G"
     if [[ "${Kongjian}" == "1" ]];then
-      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_nvjdc}，请加大磁盘空间"		
+      print_error "敬告：可用空间小于[ ${Sys_kj}G ]，不支持安装青龙${Ql_rabbit}，请加大磁盘空间"		
       sleep 1
       exit 1
     fi
@@ -482,7 +482,7 @@ function install_yanzheng() {
 
 function jiance_rabbit() {
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]] || [[ `docker ps -a | grep -c "rabbit"` -ge '1' ]]; then
-    ECHOY "检测到rabbit面板，正在卸载nvjdc面板，请稍后..."
+    ECHOY "检测到rabbit面板，正在卸载rabbit面板，请稍后..."
     dockernv=$(docker ps -a|grep rabbit) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
     imagesnv=$(docker images|grep rabbit) && imagesnvid=$(awk '{print $(3)}' <<<${imagesnv})
     docker stop -t=5 "${dockernvid}" > /dev/null 2>&1
@@ -548,7 +548,7 @@ function linux_rabbit() {
     print_error "rabbit镜像启动失败"
     exit 1
   fi
-  dockernv=$(docker ps -a|grep nvjdc) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
+  dockernv=$(docker ps -a|grep rabbit) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
   docker update --restart=always "${dockernvid}" > /dev/null 2>&1
   rm -rf ${Home}/build.log
   timeout 4 docker logs -f rabbit |tee ${Home}/build.log
@@ -564,18 +564,19 @@ function linux_rabbit() {
   ECHOY "您的rabbit面板地址为：http://${IP}:${JDC_PORT}"
 }
 
-function up_nvjdc() {
+function up_rabbit() {
   cd ${Current}
   [[ -f /etc/bianliang.sh ]] && source /etc/bianliang.sh
  # ECHOY "下载rabbit源码"
- # rm -rf ${QL_PATH}/nvjdcbf
-  #cp -Rf ${Home} ${QL_PATH}/nvjdcbf
- # rm -rf "${Home}" && git clone ${GithubProxyUrl}https://github.com/shidahuilang/nvjdc.git ${Home}
+rm -rf /root/Rabbit > /dev/null
+   cd /root && mkdir -p  Rabbit && cd Rabbit
+   cd /root/Rabbit && mkdir -p  Config
+   cd /root/Rabbit
   judge "下载源码"
-  cp -Rf ${QL_PATH}/nvjdcbf/Config ${Home}/Config
-  cp -Rf ${QL_PATH}/nvjdcbf/.local-chromium ${Home}/.local-chromium
+  cp -Rf ${QL_PATH}/rabbitbf/Config ${Home}/Config
+  cp -Rf ${QL_PATH}/rabbitbf/.local-chromium ${Home}/.local-chromium
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]] || [[ `docker ps -a | grep -c "rabbit"` -ge '1' ]]; then
-    ECHOY "卸载nvjdc镜像"
+    ECHOY "卸载rabbit镜像"
     dockernv=$(docker ps -a|grep rabbit) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
     imagesnv=$(docker images|grep rabbit) && imagesnvid=$(awk '{print $(3)}' <<<${imagesnv})
     docker stop -t=5 "${dockernvid}" > /dev/null 2>&1
@@ -680,26 +681,26 @@ function config_bianliang() {
   [[ -d ${Home} ]] && echo "${Home}/rwwc" > ${Home}/rwwc
 }
 
-function aznvjdc() {
-  jiance_nvjdc
+function azrabbit() {
+  jiance_rabbit
   git_clone
-  pull_nvjdc
+  pull_rabbit
   Config_json
   chrome_linux
-  linux_nolanjdc
+  linux_rabbit
   config_bianliang
 }
 
-function qinglong_nvjdc() {
+function qinglong_rabbit() {
   qinglong_port
   Google_Check
   system_check
   kaiqiroot_ssh
-  nolanjdc_lj
+  rabbit_lj
   system_docker
   systemctl_status
   uninstall_qinglong
-  jiance_nvjdc
+  jiance_rabbit
   sys_kongjian
   install_ql
   qinglong_dl
@@ -707,7 +708,7 @@ function qinglong_nvjdc() {
   OpenApi_Client
   install_rw
   install_yanzheng
-  aznvjdc
+  azrabbit
 }
 
 function azqinglong() {
@@ -718,7 +719,7 @@ function azqinglong() {
   system_docker
   systemctl_status
   uninstall_qinglong
-  jiance_nvjdc
+  jiance_rabbit
   sys_kongjian
   install_ql
   qinglong_dl
@@ -728,17 +729,17 @@ function azqinglong() {
   config_bianliang
 }
 
-memunvjdc() {
+memurabbit() {
   clear
   echo
   echo
   ECHOB " 1. 升级青龙面板"
   ECHOB " 2. 更新撸豆脚本库"
-  ECHOB " 3. 升级nvjdc面板"
-  ECHOB " 4. 重启青龙和nvjdc"
+  ECHOB " 3. 升级rabbit面板"
+  ECHOB " 4. 重启青龙和rabbit"
   ECHOB " 5. 重置青龙登录错误次数和检测环境并修复"
-  ECHOB " 6. 卸载nvjdc面板"
-  ECHOB " 7. 卸载青龙+nvjdc面板"
+  ECHOB " 6. 卸载rabbit面板"
+  ECHOB " 7. 卸载青龙+rabbit面板"
   ECHOB " 8. 进入第一主菜单（安装界面）"
   ECHOB " 9. 退出程序!"
   echo
@@ -757,14 +758,14 @@ memunvjdc() {
   break
   ;;
   3)
-    ECHOY "开始升级nvjdc面板，请耐心等候..."
+    ECHOY "开始升级rabbit面板，请耐心等候..."
     Google_Check
-    up_nvjdc
+    up_rabbit
   break
   ;;
   4)
-    ECHOY "重启nvjdc和青龙，请耐心等候..."
-    docker restart nolanjdc
+    ECHOY "重启rabbit和青龙，请耐心等候..."
+    docker restart rabbit
     docker restart qinglong
     sleep 5
     print_ok "命令执行完成"
@@ -780,31 +781,31 @@ memunvjdc() {
   break
   ;;
   6)
-    ECHOY " 是否卸载nvjdc面板?"
-    read -p " 是否卸载nvjdc面板?输入[Yy]回车确认,直接回车返回菜单：" YZJDC
+    ECHOY " 是否卸载rabbit面板?"
+    read -p " 是否卸载rabbit面板?输入[Yy]回车确认,直接回车返回菜单：" YZJDC
     case $YZJDC in
     [Yy])
-      ECHOG " 正在卸载nvjdc面板"
-      jiance_nvjdc
+      ECHOG " 正在卸载rabbit面板"
+      jiance_rabbit
     ;;
     *)
-      memunvjdc "$@"
+      memurabbit "$@"
     ;;
     esac
   break
   ;;
   7)
-    ECHOY " 是否卸载青龙+nvjdc面板?"
-    read -p " 是否卸载青龙+nvjdc面板?输入[Yy]回车确认,直接回车返回菜单：" YZQLNV
+    ECHOY " 是否卸载青龙+rabbit面板?"
+    read -p " 是否卸载青龙+rabbit面板?输入[Yy]回车确认,直接回车返回菜单：" YZQLNV
     case $YZQLNV in
     [Yy])
-      ECHOG "正在卸载青龙+nvjdc面板"
+      ECHOG "正在卸载青龙+rabbit面板"
       uninstall_qinglong
-      jiance_nvjdc
+      jiance_rabbit
       rm -rf /etc/bianliang.sh
     ;;
     *)
-      memunvjdc "$@"
+      memurabbit "$@"
     ;;
     esac
   break
@@ -906,8 +907,8 @@ memuaz() {
   echo
   echo
   [[ -n "${kugonggao}" ]] && ECHOY " ${kugonggao}"
-  ECHOB " 1. 安装青龙+任务+依赖+nvjdc面板"
-  ECHOB " 2. 安装青龙+任务+nvjdc面板（依赖自行在青龙面板安装）"
+  ECHOB " 1. 安装青龙+任务+依赖+rabbit面板"
+  ECHOB " 2. 安装青龙+任务+rabbit面板（依赖自行在青龙面板安装）"
   ECHOB " 3. 安装青龙+任务+依赖"
   ECHOB " 4. 安装青龙+任务（依赖自行在青龙面板安装）"
   ECHOB " 5. 退出安装程序!"
@@ -920,25 +921,25 @@ memuaz() {
     export Api_Client="true"
     export Npm_yilai="true"
     export Sys_kj="10"
-    export Ql_nvjdc="和nvjdc面板"
-    ECHOG " 安装青龙+任务+依赖+nvjdc面板"
-    qinglong_nvjdc
+    export Ql_rabbit="和rabbit面板"
+    ECHOG " 安装青龙+任务+依赖+rabbit面板"
+    qinglong_rabbit
   break
   ;;
   2)
     export Api_Client="true"
     export Npm_yilai="false"
     export Sys_kj="10"
-    export Ql_nvjdc="和nvjdc面板"
-    ECHOG " 安装青龙+任务+nvjdc面板（依赖自行在青龙面板安装）"
-    qinglong_nvjdc
+    export Ql_rabbit="和rabbit面板"
+    ECHOG " 安装青龙+任务+rabbit面板（依赖自行在青龙面板安装）"
+    qinglong_rabbit
   break
   ;;
   3)
     export Api_Client="false"
     export Npm_yilai="true"
     export Sys_kj="5"
-    export Ql_nvjdc=""
+    export Ql_rabbit=""
     ECHOG " 安装青龙+任务+依赖"
     azqinglong
   break
@@ -947,7 +948,7 @@ memuaz() {
     export Api_Client="false"
     export Npm_yilai="false"
     export Sys_kj="5"
-    export Ql_nvjdc=""
+    export Ql_rabbit=""
     ECHOG " 安装青龙+任务（依赖自行在青龙面板安装）"
     azqinglong
   break
@@ -975,7 +976,7 @@ memu() {
   ECHORR "自动检测docker，有则跳过，无则安装，openwrt则请自行安装docker，如果空间太小请挂载好硬盘"
   ECHORR "如果您以前安装有青龙的话，则自动删除您的青龙容器和镜像，全部推倒重新安装"
   ECHORR "如果安装当前文件夹已经存在 ql 文件的话，如果您的[环境变量文件]符合要求，就会继续使用，免除重新输入KEY的烦恼"
-  ECHORR "nvjdc面板可以进行手机验证挂机，无需复杂的抓KEY，如果是外网架设的话，任何人都可以用您的nvjdc面板进入您的青龙挂机"
+  ECHORR "rabbit面板可以进行手机验证挂机，无需复杂的抓KEY，如果是外网架设的话，任何人都可以用您的rabbit面板进入您的青龙挂机"
   ECHORR "安装过程会有重启docker操作，如不能接受，请退出安装"
   echo
   ECHOY " 请选择您要安装什么类型的任务库"
@@ -1014,8 +1015,8 @@ memu() {
   done
 }
 [[ -f /etc/bianliang.sh ]] && source /etc/bianliang.sh
-if [[ `docker images |grep -c "qinglong"` -ge '1' ]] && [[ `docker images |grep -c "nvjdc"` -ge '1' ]] && [[ -f ${rwwc} ]] && [[ -f ${nvrwwc} ]]; then
-  memunvjdc "$@"
+if [[ `docker images |grep -c "qinglong"` -ge '1' ]] && [[ `docker images |grep -c "rabbit"` -ge '1' ]] && [[ -f ${rwwc} ]] && [[ -f ${nvrwwc} ]]; then
+  memurabbit "$@"
 elif [[ `docker images | grep -c "qinglong"` -ge '1' ]] && [[ -f ${rwwc} ]]; then
   memuqinglong "$@"
 else
