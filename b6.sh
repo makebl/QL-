@@ -230,11 +230,7 @@ function kaiqiroot_ssh() {
   fi
 }
 
-function rabbit_lj() {
-  export Home="$QL_PATH/rabbit"
-  export Config="$Home/Config"
-  #export Chromium="$Home/.local-chromium/Linux-884014"
-}
+
 
 
 
@@ -512,7 +508,7 @@ rm -rf /root/Rabbit > /dev/null
 cd /root && mkdir -p  Rabbit && cd Rabbit
 cd /root/Rabbit && mkdir -p  Config
 cd /root/Rabbit
-wget -O Config.json   https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
+cd /root/Rabbit/Config && wget -O Config.json https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
   ECHOY "安装rabbit镜像中，安装需要时间，请耐心等候..."
   docker pull shidahuilang/rabbit:2.24
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]]; then
@@ -702,7 +698,7 @@ function qinglong_rabbit() {
   Google_Check
   system_check
   kaiqiroot_ssh
-  rabbit_lj
+  #rabbit_lj
   system_docker
   systemctl_status
   uninstall_qinglong
