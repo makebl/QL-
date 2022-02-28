@@ -522,7 +522,7 @@ function linux_rabbit() {
   ECHOY "启动镜像中，请稍后..."
   
  # if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    cd /root/Rabbit && docker run --name rabbit -d -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 ht944/rabbit:latest
     #docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
     #/etc/init.d/dockerman restart > /dev/null 2>&1
     #/etc/init.d/dockerd restart > /dev/null 2>&1
