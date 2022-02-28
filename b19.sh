@@ -535,7 +535,7 @@ function linux_rabbit() {
     cd /root/Rabbit
     docker run --name rabbit -d -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
     sleep 2
-  fi
+
   cd ${Current}
   if [[ `docker ps -a | grep -c "rabbit"` -ge '1' ]]; then
     docker restart rabbit > /dev/null 2>&1
