@@ -528,7 +528,7 @@ function linux_rabbit() {
   #if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
     docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
     sleep 3
-  else
+    
     cd  ${Home}
     docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
     sleep 2
