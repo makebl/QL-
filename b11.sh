@@ -232,8 +232,6 @@ function kaiqiroot_ssh() {
 
 
 
-
-
 function system_docker() {
   if [[ "${XTong}" == "openwrt" ]]; then
     if [[ ! -x "$(command -v docker)" ]]; then
@@ -501,16 +499,15 @@ function jiance_rabbit() {
   fi
 }
 
-
-
-function pull_rabbit() {
 rm -rf /root/Rabbit > /dev/null
 cd /root && mkdir -p  Rabbit && cd Rabbit
 cd /root/Rabbit && mkdir -p  Config
 cd /root/Rabbit
-cd /root/Rabbit/Config && wget -O Config.json https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
+wget -O Config.json   https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
+
+function pull_rabbit() {
   ECHOY "安装rabbit镜像中，安装需要时间，请耐心等候..."
-  cd /root/Rabbit && docker pull shidahuilang/rabbit:2.24
+  docker pull shidahuilang/rabbit:2.24
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]]; then
     print_ok "rabbit镜像安装 完成"
   else
@@ -521,18 +518,24 @@ cd /root/Rabbit/Config && wget -O Config.json https://ghproxy.com/https://raw.gi
 
 
 
-
 function linux_rabbit() {
   ECHOY "启动镜像中，请稍后..."
-  cd /root/Rabbit
-  #if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
+  cd ${Current}
+  if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
     cd /root/Rabbit && docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
+    /etc/init.d/dockerman restart > /dev/null 2>&1
+    /etc/init.d/dockerd restart > /dev/null 2>&1
     sleep 3
-    
+  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
+    docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
+    sleep 2
+  else
     cd  ${Home}
     docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
     sleep 2
-
+  fi
   cd ${Current}
   if [[ `docker ps -a | grep -c "rabbit"` -ge '1' ]]; then
     docker restart rabbit > /dev/null 2>&1
@@ -562,8 +565,8 @@ function linux_rabbit() {
 function up_rabbit() {
   cd ${Current}
   [[ -f /etc/bianliang.sh ]] && source /etc/bianliang.sh
- ECHOY "下载rabbit源码"
-   rm -rf /root/Rabbit > /dev/null
+ # ECHOY "下载rabbit源码"
+rm -rf /root/Rabbit > /dev/null
    cd /root && mkdir -p  Rabbit && cd Rabbit
    cd /root/Rabbit && mkdir -p  Config
    cd /root/Rabbit
@@ -678,7 +681,7 @@ function config_bianliang() {
 
 function azrabbit() {
   jiance_rabbit
-  #git_clone
+  git_clone
   pull_rabbit
   Config_json
   chrome_linux
@@ -691,7 +694,7 @@ function qinglong_rabbit() {
   Google_Check
   system_check
   kaiqiroot_ssh
-  #rabbit_lj
+  rabbit_lj
   system_docker
   systemctl_status
   uninstall_qinglong
