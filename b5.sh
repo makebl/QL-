@@ -230,6 +230,12 @@ function kaiqiroot_ssh() {
   fi
 }
 
+function rabbit_lj() {
+  export Home="$QL_PATH/rabbit"
+  export Config="$Home/Config"
+  #export Chromium="$Home/.local-chromium/Linux-884014"
+}
+
 
 
 function system_docker() {
