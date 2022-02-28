@@ -502,6 +502,11 @@ function jiance_rabbit() {
 
 
 function pull_rabbit() {
+rm -rf /root/Rabbit > /dev/null
+cd /root && mkdir -p  Rabbit && cd Rabbit
+cd /root/Rabbit && mkdir -p  Config
+cd /root/Rabbit
+wget -O Config.json   https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
   ECHOY "安装rabbit镜像中，安装需要时间，请耐心等候..."
   docker pull shidahuilang/rabbit:2.24
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]]; then
@@ -562,8 +567,8 @@ function linux_rabbit() {
 function up_rabbit() {
   cd ${Current}
   [[ -f /etc/bianliang.sh ]] && source /etc/bianliang.sh
- # ECHOY "下载rabbit源码"
-rm -rf /root/Rabbit > /dev/null
+ ECHOY "下载rabbit源码"
+   rm -rf /root/Rabbit > /dev/null
    cd /root && mkdir -p  Rabbit && cd Rabbit
    cd /root/Rabbit && mkdir -p  Config
    cd /root/Rabbit
