@@ -499,15 +499,16 @@ function jiance_rabbit() {
   fi
 }
 
+
+
+function pull_rabbit() {
 rm -rf /root/Rabbit > /dev/null
 cd /root && mkdir -p  Rabbit && cd Rabbit
 cd /root/Rabbit && mkdir -p  Config
 cd /root/Rabbit
 wget -O Config.json https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
-
-function pull_rabbit() {
   ECHOY "安装rabbit镜像中，安装需要时间，请耐心等候..."
-  docker pull shidahuilang/rabbit:2.24
+  docker pull ht944/rabbit:latest
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]]; then
     print_ok "rabbit镜像安装 完成"
   else
@@ -528,12 +529,12 @@ function linux_rabbit() {
     #/etc/init.d/dockerd restart > /dev/null 2>&1
     sleep 3
  # elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 ht944/rabbit:latest
    # docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
     sleep 2
  # else
     cd /root/Rabbit
-    docker run --name rabbit -d -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 ht944/rabbit:latest
     sleep 2
 
   cd ${Current}
