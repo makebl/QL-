@@ -520,16 +520,16 @@ function pull_rabbit() {
 
 function linux_rabbit() {
   ECHOY "启动镜像中，请稍后..."
-  cd /root/Rabbit
-  if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    docker run --name rabbit -d -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
-    docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
-    /etc/init.d/dockerman restart > /dev/null 2>&1
-    /etc/init.d/dockerd restart > /dev/null 2>&1
+  
+ # if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
+    cd /root/Rabbit && docker run --name rabbit -d -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    #docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
+    #/etc/init.d/dockerman restart > /dev/null 2>&1
+    #/etc/init.d/dockerd restart > /dev/null 2>&1
     sleep 3
   elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
     docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
-    docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
+   # docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
     sleep 2
   else
     cd /root/Rabbit
@@ -547,7 +547,7 @@ function linux_rabbit() {
     exit 1
   fi
   dockernv=$(docker ps -a|grep rabbit) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
-  docker update --restart=always "${dockernvid}" > /dev/null 2>&1
+  #docker update --restart=always "${dockernvid}" > /dev/null 2>&1
   rm -rf ${Home}/build.log
   timeout 4 docker logs -f rabbit |tee ${Home}/build.log
   timeout 9 docker logs -f rabbit |tee ${Home}/build.log
