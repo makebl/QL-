@@ -512,12 +512,7 @@ function pull_rabbit() {
   fi
 }
 
-function Config_json() {
-  mkdir -p ${Config}
-  bash -c  "$(curl -fsSL ${curlurl}/Config.json)"
-  judge "自动配置rabbit的Config.json文件"
-  chmod +x ${Config}/Config.json
-}
+
 
 
 function linux_rabbit() {
