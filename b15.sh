@@ -503,7 +503,7 @@ rm -rf /root/Rabbit > /dev/null
 cd /root && mkdir -p  Rabbit && cd Rabbit
 cd /root/Rabbit && mkdir -p  Config
 cd /root/Rabbit
-wget -O Config.json   https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
+wget -O Config.json https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
 
 function pull_rabbit() {
   ECHOY "安装rabbit镜像中，安装需要时间，请耐心等候..."
