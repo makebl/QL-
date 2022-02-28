@@ -510,7 +510,7 @@ cd /root/Rabbit && mkdir -p  Config
 cd /root/Rabbit
 cd /root/Rabbit/Config && wget -O Config.json https://ghproxy.com/https://raw.githubusercontent.com/shidahuilang/QL-/main/Config.json
   ECHOY "安装rabbit镜像中，安装需要时间，请耐心等候..."
-  docker pull shidahuilang/rabbit:2.24
+  cd /root/Rabbit && docker pull shidahuilang/rabbit:2.24
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]]; then
     print_ok "rabbit镜像安装 完成"
   else
@@ -526,7 +526,7 @@ function linux_rabbit() {
   ECHOY "启动镜像中，请稍后..."
   cd /root/Rabbit
   #if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    cd /root/Rabbit && docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
     sleep 3
     
     cd  ${Home}
