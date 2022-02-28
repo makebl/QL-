@@ -678,7 +678,7 @@ function config_bianliang() {
 
 function azrabbit() {
   jiance_rabbit
-  git_clone
+  #git_clone
   pull_rabbit
   Config_json
   chrome_linux
