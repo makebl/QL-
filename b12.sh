@@ -694,7 +694,7 @@ function qinglong_rabbit() {
   Google_Check
   system_check
   kaiqiroot_ssh
-  rabbit_lj
+  #rabbit_lj
   system_docker
   systemctl_status
   uninstall_qinglong
