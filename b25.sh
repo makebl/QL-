@@ -508,10 +508,10 @@ function jiance_rabbit() {
 
 function pull_rabbit() {
 rm -rf /root/Rabbit > /dev/null
-cd /root && mkdir -p  Rabbit && cd Rabbit
-cd /root/Rabbit && mkdir -p  Config
-cd /root/Rabbit
-cd /root/Rabbit/Config && wget -O Config.json  https://raw.githubusercontent.com/ht944/MadRabbit/main/Config.json
+cd /opt && mkdir -p  Rabbit && cd Rabbit
+cd /opt/Rabbit && mkdir -p  Config
+cd /opt/Rabbit
+cd /opt/Rabbit/Config && wget -O Config.json  https://raw.githubusercontent.com/ht944/MadRabbit/main/Config.json
   ECHOY "安装rabbit镜像中，安装需要时间，请耐心等候..."
   docker pull shidahuilang/rabbit:latest
   if [[ `docker images | grep -c "rabbit"` -ge '1' ]]; then
@@ -527,8 +527,8 @@ cd /root/Rabbit/Config && wget -O Config.json  https://raw.githubusercontent.com
 function linux_rabbit() {
   ECHOY "启动镜像中，请稍后..."
   
- # if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config --net host shidahuilang/rabbit:latest
+  if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
+    cd /opt/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config --net host shidahuilang/rabbit:latest
     #docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
     #/etc/init.d/dockerman restart > /dev/null 2>&1
     #/etc/init.d/dockerd restart > /dev/null 2>&1
@@ -541,7 +541,7 @@ function linux_rabbit() {
     cd /root/Rabbit
     cd /root/Rabbit && docker run --name rabbit -d  -v "$(pwd)"/Config:/usr/src/Project/Config --net host shidahuilang/rabbit:latest
     sleep 2
-
+fi
   cd ${Current}
   if [[ `docker ps -a | grep -c "rabbit"` -ge '1' ]]; then
     docker restart rabbit > /dev/null 2>&1
