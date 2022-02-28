@@ -480,20 +480,20 @@ function install_yanzheng() {
   print_ok "任务安装完成，请刷新青龙面板查看"
 }
 
-function jiance_nvjdc() {
-  if [[ `docker images | grep -c "nvjdc"` -ge '1' ]] || [[ `docker ps -a | grep -c "nvjdc"` -ge '1' ]]; then
-    ECHOY "检测到nvjdc面板，正在卸载nvjdc面板，请稍后..."
-    dockernv=$(docker ps -a|grep nvjdc) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
-    imagesnv=$(docker images|grep nvjdc) && imagesnvid=$(awk '{print $(3)}' <<<${imagesnv})
+function jiance_rabbit() {
+  if [[ `docker images | grep -c "rabbit"` -ge '1' ]] || [[ `docker ps -a | grep -c "rabbit"` -ge '1' ]]; then
+    ECHOY "检测到rabbit面板，正在卸载nvjdc面板，请稍后..."
+    dockernv=$(docker ps -a|grep rabbit) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
+    imagesnv=$(docker images|grep rabbit) && imagesnvid=$(awk '{print $(3)}' <<<${imagesnv})
     docker stop -t=5 "${dockernvid}" > /dev/null 2>&1
     docker rm "${dockernvid}"
     docker rmi "${imagesnvid}"
-    find / -iname 'nolanjdc' | xargs -i rm -rf {} > /dev/null 2>&1
-    find / -iname 'nvjdc' | xargs -i rm -rf {} > /dev/null 2>&1
-    if [[ `docker images | grep -c "nvjdc"` == '0' ]]; then
-      print_ok "nvjdc面板卸载完成"
+    find / -iname 'rabbit' | xargs -i rm -rf {} > /dev/null 2>&1
+    find / -iname 'rabbit' | xargs -i rm -rf {} > /dev/null 2>&1
+    if [[ `docker images | grep -c "rabbit"` == '0' ]]; then
+      print_ok "rabbit面板卸载完成"
     else
-      print_error "nvjdc面板卸载失败"
+      print_error "rabbit面板卸载失败"
       exit 1
     fi
   fi
