@@ -230,6 +230,11 @@ function kaiqiroot_ssh() {
   fi
 }
 
+function rabbit_lj() {
+  export Home="$QL_PATH/rabbit"
+  export Config="$Home/Config/Config.json"
+  #export Chromium="$Home/.local-chromium/Linux-884014"
+}
 
 
 function system_docker() {
@@ -695,7 +700,7 @@ function qinglong_rabbit() {
   Google_Check
   system_check
   kaiqiroot_ssh
-  #rabbit_lj
+  rabbit_lj
   system_docker
   systemctl_status
   uninstall_qinglong
