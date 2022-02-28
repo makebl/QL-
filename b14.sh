@@ -520,9 +520,9 @@ function pull_rabbit() {
 
 function linux_rabbit() {
   ECHOY "启动镜像中，请稍后..."
-  cd ${Current}
+  cd /root/Rabbit
   if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    cd /root/Rabbit && docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    docker run --name rabbit -d -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
     docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
     /etc/init.d/dockerman restart > /dev/null 2>&1
     /etc/init.d/dockerd restart > /dev/null 2>&1
@@ -532,8 +532,8 @@ function linux_rabbit() {
     docker exec -it rabbit bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
     sleep 2
   else
-    cd  ${Home}
-    docker run --name rabbit -d  -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
+    cd /root/Rabbit
+    docker run --name rabbit -d -v --restart unless-stopped "$(pwd)"/Config:/usr/src/Project/Config -p 5701:1234 shidahuilang/rabbit:2.24
     sleep 2
   fi
   cd ${Current}
