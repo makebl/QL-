@@ -36,6 +36,7 @@ disable_shell_path=$dir_script/disableDuplicateTasksImplement.py
 wskey_shell_path=$dir_script/wskey.py
 crypto_shell_path=$dir_script/crypto-js.js
 wx_jysz_shell_path=$dir_script/wx_jysz.js
+ckck2_shell_path=$dir_script/ckck2.sh
 OpenCard_shell_path=$dir_script/raw_jd_OpenCard.py
 task_before_shell_path=$dir_shell/task_before.sh
 sample_shell_path=/ql/sample/config.sample.sh
@@ -56,8 +57,8 @@ TIME l "拉取config.sample.sh"
 curl -fsSL ${curlurl}/Aaron-lv/config.sample.sh > /ql/qlwj/config.sample.sh
 TIME l "拉取extra.sh"
 curl -fsSL ${curlurl}/Aaron-lv/extra.sh > /ql/qlwj/extra.sh
-TIME l "拉取raw_jd_OpenCard.py"
-curl -fsSL ${curlurl}/Aaron-lv/raw_jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
+TIME l "拉取jd_OpenCard.py"
+curl -fsSL ${curlurl}/Aaron-lv/jd_OpenCard.py > /ql/qlwj/raw_jd_OpenCard.py
 TIME l "拉取wskey.py"
 curl -fsSL ${curlurl}/Aaron-lv/wskey.py > /ql/qlwj/wskey.py
 TIME l "拉取disableDuplicateTasksImplement.py"
@@ -72,6 +73,10 @@ TIME l "拉取1-5.sh"
 curl -fsSL ${curlurl}/Aaron-lv/jd/1-5.sh > /ql/jd/1-5.sh
 TIME l "拉取6-10.sh"
 curl -fsSL ${curlurl}/Aaron-lv/jd/6-10.sh > /ql/jd/6-10.sh
+TIME l "拉取jd_sms_login.py"
+curl -fsSL ${curlurl}/Aaron-lv/jd_sms_login.py > /ql/qlwj/jd_sms_login.py
+TIME l "拉取ckck2.sh"
+curl -fsSL ${curlurl}/Aaron-lv/ckck2.sh > /ql/qlwj/ckck2.sh
 chmod -R +x /ql/qlwj
 cp -Rf /ql/qlwj/config.sample.sh /ql/config/config.sh
 cp -Rf /ql/qlwj/config.sample.sh /ql/sample/config.sample.sh
@@ -83,6 +88,8 @@ cp -Rf /ql/qlwj/disableDuplicateTasksImplement.py /ql/scripts/disableDuplicateTa
 cp -Rf /ql/qlwj/jd_get_share_code.js /ql/scripts/jd_get_share_code.js
 cp -Rf /ql/qlwj/jdCookie.js /ql/scripts/jdCookie.js
 cp -Rf /ql/qlwj/jd_cleancartAll.js /ql/scripts/jd_cleancartAll.js
+cp -Rf /ql/qlwj/ckck2.sh /ql/scripts/ckck2.sh
+cp -Rf /ql/qlwj/jd_sms_login.py /ql/scripts/jd_sms_login.py
 echo
 # 将 extra.sh 添加到定时任务
 if [ "$(grep -c extra /ql/config/crontab.list)" = 0 ]; then
@@ -97,11 +104,11 @@ sleep 1
 echo
 if [ "$(grep -c wskey.py /ql/config/crontab.list)" = 0 ]; then
     echo
-    TIME g "添加任务 [每6小时转换WSKEY]"
+    TIME g "添加任务 [每4小时转换WSKEY]"
     echo
     # 获取token
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
-    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"每6小时转换WSKEY","command":"task wskey.py","schedule":"58 0-23/5 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1633428022377'
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"每4小时转换WSKEY","command":"task wskey.py","schedule":"58 0-23/4 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1633428022377'
 fi
 sleep 1
 echo
@@ -116,6 +123,17 @@ if [ "$(grep -c bot /ql/config/crontab.list)" = 0 ]; then
 fi
 sleep 1
 echo
+# 将 ckck2.sh 添加到定时任务
+if [ "$(grep -c ckck2.sh /ql/config/crontab.list)" = 0 ]; then
+    echo
+    TIME g "添加任务 [wskey新转换]"
+    echo
+    # 获取token
+    token=$(cat /ql/config/auth.json | jq --raw-output .token)
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"wskey新转换","command":"task ckck2.sh","schedule":"8 8,15,20 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634041221467'
+fi
+sleep 1
+echo
 # 将 raw_jd_OpenCard.py 添加到定时任务
 if [ "$(grep -c raw_jd_OpenCard.py /ql/config/crontab.list)" = 0 ]; then
     echo
@@ -124,6 +142,17 @@ if [ "$(grep -c raw_jd_OpenCard.py /ql/config/crontab.list)" = 0 ]; then
     # 获取token
     token=$(cat /ql/config/auth.json | jq --raw-output .token)
     curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"JD入会开卡领取京豆","command":"task raw_jd_OpenCard.py","schedule":"8 8,15,20 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634041221437'
+fi
+sleep 1
+echo
+# 将 jd_sms_login.py 添加到定时任务
+if [ "$(grep -c jd_sms_login.py /ql/config/crontab.list)" = 0 ]; then
+    echo
+    TIME g "添加任务 [获取CK脚本]"
+    echo
+    # 获取token
+    token=$(cat /ql/config/auth.json | jq --raw-output .token)
+    curl -s -H 'Accept: application/json' -H "Authorization: Bearer $token" -H 'Content-Type: application/json;charset=UTF-8' -H 'Accept-Language: zh-CN,zh;q=0.9' --data-binary '{"name":"获取CK脚本","command":"task jd_sms_login.py","schedule":"8 8,15,20 * * *"}' --compressed 'http://127.0.0.1:5700/api/crons?t=1634041221417'
 fi
 sleep 1
 echo
@@ -182,7 +211,7 @@ if [ "$(grep -c jd_cleancartAll.js /ql/config/crontab.list)" = 0 ]; then
 fi
 task wskey.py |tee azcg.log
 echo
-TIME y "拉取faker2和JDHelloWorld两个大佬的脚本（用TG机器人每周提交助力码）"
+TIME y "拉取zero205和yyds两个脚本（用TG机器人每周提交助力码）"
 echo
 echo
 rm -fr /ql/azcg.log

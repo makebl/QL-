@@ -17,7 +17,7 @@ DefaultCronRule=""
 RepoFileExtensions="js py sh ts"
 
 ## 由于github仓库拉取较慢，所以会默认添加代理前缀，如不需要请移除
-GithubProxyUrl="https://ghproxy.com/"
+GithubProxyUrl=""
 
 ## 设置定时任务执行的超时时间，默认1h，后缀"s"代表秒(默认值), "m"代表分, "h"代表小时, "d"代表天
 CommandTimeoutTime="1h"
@@ -33,7 +33,7 @@ RandomDelay="300"
 EnableExtraShell="true"
 
 ## 是否自动启动bot，默认不启动，设置为true时自动启动，目前需要自行克隆bot仓库所需代码，存到ql/repo目录下，文件夹命名为dockerbot
-AutoStartBot=""
+AutoStartBot="true"
 
 ## 安装bot依赖时指定pip源，默认使用清华源，如不需要源，设置此参数为空
 PipMirror="https://pypi.tuna.tsinghua.edu.cn/simple"
@@ -129,6 +129,119 @@ NotifyBeanSign="1"
 ## 默认每个签到接口并发无延迟，如需要依次进行每个接口，请自定义延迟时间，单位为毫秒，延迟作用于每个签到接口, 如填入延迟则切换顺序签到(耗时较长)
 export JD_BEAN_STOP="9"
 
+## 13 Shell 版 Cookie 检测工具 ckck2 环境变量
+## 13.1 推送失效账号、有效账号
+### 赋值要求：填 1 表示只推送失效账号；
+###           填 2 表示推送失效账号、有效账号；
+###           空值或填其他内容表示不启用该功能。
+NOTIFY_VALID_CK_TYPE=""
+## 13.2 如果本次检测的失效、有效账号与上次结果一致，则不通知
+### 赋值要求：填 1 表示如果失效账号未变化，则不通知。空值或填其他内容表示不启用该功能。
+NOTIFY_SKIP_SAME_CONTENT=""
+## 13.3 预测和通知账号剩余有效期
+## 13.3.1 预测和通知账号剩余有效期的检测和通知类型
+### 赋值要求：填 1 表示预测和通知账号剩余有效期；
+###           填 2 表示只预测不通知账号剩余有效期；
+###           空值或填其他内容表示不启用该功能。
+NOTIFY_VALID_TIME=""
+## 13.3.2 临期通知
+### 自定义账号有效期不足N天时发出一对一通知
+### 赋值要求：正整数数字，（单位：天）;
+###           空值表示不启用该功能。
+NOTIFY_VALID_DAY=""
+## 13.4 JD_WSCK(wskey)相关
+## 13.4.1 (失效)检测到失效账号后是否搜索并运行 WSKEY 转换 Cookie 的脚本(需要 /ql/scripts 或其子路径已存在 wskey 转换脚本)
+### 赋值要求：填 1 表示启用 WSKEY 转换 Cookie 功能。空值或其他值表示不启用该功能。
+### WSKEY_TO_CK=""
+## 13.4.2 (失效)自定义调用的 wskey 转换脚本
+### 赋值要求：例如 wskey_scr="hyzaw_scripts/ql_refreshCK.py"。空值或其他值表示自动搜索文件名中包含 wskey 的 py 文件。
+### diy_wskey_scr=""
+## 13.4.3 (失效)当未搜索到 wskey 脚本时下载 wskey 转换脚本，下载路径 /ql/scripts/
+### 赋值要求：填 1 表示启用下载 wskey 转换脚本功能。空值或其他值表示不启用该功能。
+### DOWNLOAD_WSKEY_SCR=""
+## 13.4.4 (失效)下载 wskey 转换脚本的 URL 链接
+### 赋值要求：空值，则默认下载 ZL143L 的脚本。非必要留空即可。也可自定义其他链接。
+### WSKEY_SCR_URL=""
+## 13.4.5 (失效)当检索到下载路径 /ql/scripts/ 存在 wskey 转换脚本时，先行检测更新脚本后再进行 wskey 转换
+### 赋值要求：填 1 表示启用功能。空值或其他值表示不启用该功能。
+### CHECK_UPDATE_WSKEY_SCR=""
+## 13.4.6 JD_WSCK(wskey) 未录入情况的检测和通知类型
+### 赋值要求：填 1 表示检测和通知 JD_WSCK(wskey) 未录入情况；
+###           填 2 表示只检测不通知 JD_WSCK(wskey) 未录入情况；
+###           空值或填其他内容表示不启用该功能。
+NOTIFY_WSKEY_NO_EXIST=""
+## 13.4.7 JD_WSCK(wskey) 提前转换 JD_COOKIE
+### 当 JD_COOKIE 剩余有效期不足 N 小时，强制 JD_WSCK(wskey) 转换 JD_COOKIE
+### 赋值要求：正整数数字，（单位：小时）；
+###           空值表示检测到 JD_COOKIE 过期失效后才启动转换。
+WSKEY_UPDATE_VALIDITY_HOUR=""
+### 13.5 是否自动重启生效 Cookie/是否自动禁用失效 Cookie
+### 13.5.1 是否禁用失效 Cookie
+### 赋值要求：任意赋值表示不自动禁用，空值表示自动禁用
+export WSKEY_AUTO_DISABLE=""
+### 13.5.2 是否重启生效 Cookie
+### 赋值要求：任意赋值表示不自动重启，空值表示自动重启
+export WSKEY_AUTO_ENABLE=""
+## 13.6 将 JD_COOKIE 的 pt_pin 值的备注名同步 至 JD_WSCK(wskey) 的同 pin 值的备注名
+### 赋值要求：填 1 表示同步；
+###           空值或填其他内容表示不启用该功能。
+WSKEY_REMARK_SYNC=""
+## 13.7 WxPusher相关
+## 说明：默认在 /ql/scripts/ 生成、更新 CK_WxPusherUid.json 文件，如果账号存在 UID ，可配合 ccwav 的 sendNotify.js 实现一对一推送
+### 13.7.1 未录入 WxPusher UID 的账号。
+### 赋值要求：填 1 表示检测并通知未录入 WxPusher UID 的账号；
+###           填 2 表示只预测不通知未录入 WxPusher UID 的账号；
+###           空值或填其他内容表示不启用该功能。
+CK_WxPusherUid="2"
+### 13.7.2 自动补全备注中的时间戳和UID
+## 说明：当 CK_WxPusherUid.json 文件，中存在账号的 UID 且面板环境变量备注中缺少时间戳或 UID 时生效
+### 赋值要求：填 1 表示补全；
+###           空值或填其他内容表示不启用该功能。
+SCANF_WXPusher_Remarks=""
+### 13.7.3 WxPusher App Token，用于一对一推送账号失效通知(同 ccwav 一对一通知环境变量，只可保留一个)。
+### 格式为 AT_xxxx；查看地址：https://wxpusher.zjiecode.com/admin/main/app/appToken
+export WP_APP_TOKEN_ONE=""
+### 13.7.4 WxPusher 主 UID，主 UID 账号可以接收失效的第三者账号及其是否录入JD_WSCK(wskey)的信息。
+### 格式为 UID_xxxx；查看地址：https://wxpusher.zjiecode.com/admin/main/wxuser/list
+MainWP_UID=""
+### 13.7.5 禁止通知 MainWP_UID 的模式
+### 赋值要求：填 0 表示状态变化及有效期临期均不通知 MainWP_UID；
+###           填 1 表示状态变化通知 MainWP_UID，有效期临期不通知 MainWP_UID；
+###           填 2 表示有效期临期通知 MainWP_UID，状态变化不通知 MainWP_UID；
+###           空值或填其他内容表示状态变化及有效期临期均通知 MainWP_UID。
+NOTIFY_DISABLE_MainWP_UID=""
+### 13.7.6 指定时间段推送失效账号信息
+### 当账号失效后，每天在指定的时间段运行脚本，一次或多次推送 WxPusher 一对一通知；
+### 赋值要求：填 0 至 23 的单个正整数。例如：NOTIFY_WxPusher_TIME="10"；
+###           填 0 至 23 的多个正整数。例如：NOTIFY_WxPusher_TIME="10 15 20"；
+###           填 0 至 23 的数段。例如：NOTIFY_WxPusher_TIME="8~10"或NOTIFY_WxPusher_TIME="8_10"或NOTIFY_WxPusher_TIME="8-10"；
+###           填以上模式的混合内容。例如：NOTIFY_WxPusher_TIME="6 8~10 12-14 16_18"；
+###           空值或填其他内容表示不启用该功能。
+NOTIFY_WxPusher_TIME=""
+## 13.8 扩展通知
+### 通知内容出现在正文顶部或末尾。支持 HTML 语言代码，仅支持 pushplus 、WxPusher 这些 HTML 代码通知的渠道
+### 例如：ExNotify_Top_Content='<iframe allowtransparency="true" frameborder="0" width="100%" height="auto" scrolling="yes" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=0&v=0&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=100%&h=auto&align=center"></iframe>'
+###       ExNotify_Bot_Content='NoLan服务器：<a href="http://服务器地址:端口?key=HeaderKey">点击访问</a>'
+ExNotify_Top_Content=''
+ExNotify_Bot_Content='<iframe allowtransparency="true" frameborder="0" width="100%" height="auto" scrolling="yes" src="//tianqi.2345.com/plugin/widget/index.htm?s=2&z=1&t=0&v=0&d=5&bd=0&k=&f=&ltf=009944&htf=cc0000&q=1&e=1&a=1&c=54511&w=100%&h=auto&align=center"></iframe>'
+
+## 14 Shell 版公告 notify2 环境变量(WxPusher、企业微信应用、pushplus、hxtrip pushplus)
+## 14.1 读取 WxPusher UID 的方式
+### 赋值要求：填 1 表示读取青龙面板环境变量中未被禁用的 JD_COOKIE 备注中的 UID；
+###          填 2 表示读取 /ql/scripts/CK_WxPusherUid.json。必须是 ckck2 生成的带有 status 键值的版本。
+WxPusher_UID_src=''
+## 14.2 过滤已被禁用的环境变量
+### 赋值要求：填 true 表示不发送给已被禁用的环境变量；
+###          填 false 表示发送给所有环境变量。
+Filter_Disabled_Variable="true"
+## 14.3 推送通知的标题
+NOTICE_TITLE=''
+## 14.4 推送通知的摘要内容
+NOTICE_SUMMARY=''
+## 14.5 推送通知的正文内容。支持 HTML 语言代码
+NOTICE_CONTENT=''
+
+## 其他需要的变量，脚本中需要的变量使用 export 变量名= 声明即可
 # 脚本推送控制类环境变量
 ##宠汪汪积分兑换有就换版
 #export JOY_GET20WHEN16="true"  #控制16点才触发20京豆兑换.
@@ -156,7 +269,7 @@ export JOY_RUN_NOTIFY="true"
 ## 11、东东超市兑换奖品是否关闭推送通知。填false为不关闭推送,true为关闭推送
 export MARKET_REWARD_NOTIFY="true"
 ## 12、京喜财富岛控制是否运行脚本后通知。输入true为通知,不填则为不通知
-export CFD_NOTIFY_CONTROL="true"
+export CFD_NOTIFY_CONTROL=""
 ## 13、京喜农场岛控制是否运行脚本后通知。0=只通知成熟;1=本次获得水滴>0;2=任务执行;3=任务执行+未种植种子
 export JXNC_NOTIFY_LEVEL="3"
 
@@ -218,8 +331,8 @@ export DREAMFACTORY_FORBID_ACCOUNT=""
 export PURCHASE_SHOPS="true"
 ## 21、京喜工厂拼团瓜分电力活动的activeId（当前需抓包替换或去群里求别人分享）
 export TUAN_ACTIVEID=""
-## 22、美丽研究院开关
-export JD_USER_AGENT="true"
+## 22、京东UA。点点券、美丽研究院，脚本运行环境变量
+export JD_USER_AGENT="jdapp;iPhone;10.0.6;14.6;network/wifi;JDEbook/openapp.jdreader;model/iPhone11,8;appBuild/167724;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"
 
 # ccwav 环境变量
 ## [1] jd_CheckCK.js
@@ -434,7 +547,10 @@ export JD_CART_KEYWORDS=""
 ### 由ZCY01二次修改：脚本默认不运行，由X1a0He修复：依然保持脚本默认不运行。true为运行
 ### 使用前请认真看对应注释：https://raw.githubusercontent.com/X1a0He/jd_scripts_fixed/main/jd_try_xh.js
 export JD_TRY="true"
-export JD_TRY_PRICE="20"
+export JD_TRY_PRICE="10"
+export JD_TRY_TRIALPRICE="10"
+export JD_TRY_MINSUPPLYNUM="1"
+export JD_TRY_APPLYNUMFILTER="* 10 || 10000"
 export JD_TRY_TITLEFILTERS="早餐奶@产后修复@体验装@腮红@卡针@袜子一双@睫毛胶水@儿童牛奶@牙刷头@灵芝@孢子@除臭@鼻炎@口罩@宠物@和田玉@祛痘@解酒@教程@软件@英语@辅导@培训@流量卡@保护套@手机壳@衣架@戒烟@棉签@网课@擦杯布@驱蚊@刷头@卸妆@互动课@小靓美@脚气@文胸@卷尺@种子@档案袋@癣@中年@老太太@妇女@私处@孕妇@卫生巾@卫生条@课@培训@阴道@生殖器@肛门@狐臭@少女内衣@胸罩@洋娃娃@益智@少女@女性内衣@女性内裤@女内裤@女内衣@女孩@屏风底座@童装@吊带@黑丝@钢圈@婴儿@儿童@玩具@幼儿@娃娃@网课@网校@电商@手机壳@钢化膜@网络课程@女纯棉@三角裤@美少女@纸尿裤@英语@俄语@四级@六级@四六级@在线网络@在线@阴道炎@宫颈@糜烂@打底裤@手机膜@鱼@狗"
 ## 4、批量取关店铺和商品
 ### 是否执行取消关注，默认true
@@ -602,3 +718,7 @@ case $1 in
         ran_num=""
         ;;
 esac
+
+#清空购物车
+export gua_cleancart_products="true"
+export gua_cleancart_Run="true"
