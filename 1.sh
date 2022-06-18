@@ -1,9 +1,6 @@
 #!/bin/bash
 #author kissyouhunter
 
-declare flag=0
-clear
-while [ "$flag" -eq 0 ]
 
 # MaiARK 变量
 MAIARK_DOCKER_IMG_NAME="kissyouhunter/maiark"
