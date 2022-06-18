@@ -54,6 +54,7 @@ TIME() {
 
 
 
+#cat << EOF
 TIME w "----------------------------------------"
 TIME w "|****Please Enter Your Choice:[0-2]****|"
 TIME w "|************** MaiARK ****************|"
