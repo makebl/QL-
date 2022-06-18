@@ -1,10 +1,5 @@
 #!/bin/bash
 #author kissyouhunter
-
-declare flag=0
-clear
-while [ "$flag" -eq 0 ]
-do
 # 青龙变量
 QL_DOCKER_IMG_NAME="whyour/qinglong"
 TAG="latest"
