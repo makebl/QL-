@@ -1,7 +1,97 @@
 #!/bin/bash
 #author kissyouhunter
 
-
+declare flag=0
+clear
+while [ "$flag" -eq 0 ]
+do
+# 青龙变量
+QL_DOCKER_IMG_NAME="whyour/qinglong"
+TAG="latest"
+QL_PATH=""
+QL_SHELL_FOLDER=$(pwd)/ql
+N1_QL_FOLDER=/mnt/mmcblk2p4/ql
+QL_CONTAINER_NAME=""
+NETWORK="bridge"
+QL_PORT="5700"
+# elev2p变量
+V2P_DOCKER_IMG_NAME="elecv2/elecv2p"
+V2P_PATH=""
+V2P_SHELL_FOLDER=$(pwd)/elecv2p
+N1_V2P_FOLDER=/mnt/mmcblk2p4/elecv2p
+V2P_CONTAINER_NAME=""
+V2P_PORT="8100"
+V2P_PORT1="8101"
+V2P_PORT2="8102"
+# emby变量
+EMBY_DOCKER_IMG_NAME="xinjiawei1/emby_unlockd"
+EMBY_TAG="latest"
+EMBY_PATH=""
+EMBY_CONFIG_FOLDER=$(pwd)/emby
+EMBY_MOVIES_FOLDER=$(pwd)/movies
+EMBY_TVSHOWS_FOLDER=$(pwd)/tvshows
+EMBY_CONTAINER_NAME=""
+EMBY_PORT="8096"
+EMBY_PORT1="8920"
+# jellyfin变量
+JELLYFIN_DOCKER_IMG_NAME="jellyfin/jellyfin"
+JELLYFIN_PATH=""
+JELLYFIN_CONFIG_FOLDER=$(pwd)/jellyfin
+JELLYFIN_MOVIES_FOLDER=$(pwd)/movies
+JELLYFIN_TVSHOWS_FOLDER=$(pwd)/tvshows
+JELLYFIN_CONTAINER_NAME=""
+JELLYFIN_PORT="8096"
+JELLYFIN_PORT1="8920"
+# qbittorrent变量
+QB_DOCKER_IMG_NAME="johngong/qbittorrent"
+QB_TAG="qee-latest"
+QB_PATH=""
+QB_CONFIG_FOLDER=$(pwd)/qbittorrent
+QB_DOWNLOADS_FOLDER=$(pwd)/downloads
+QB_CONTAINER_NAME=""
+# aria2变量
+ARIA2_DOCKER_IMG_NAME="superng6/aria2"
+ARIA2_TAG="webui-latest"
+ARIA2_PATH=""
+ARIA2_CONFIG_FOLDER=$(pwd)/aria2
+ARIA2_DOWNLOADS_FOLDER=$(pwd)/downloads
+ARIA2_CONTAINER_NAME=""
+TOKEN="aria2"
+# aria2-pro变量
+ARIA2_PRO_DOCKER_IMG_NAME="p3terx/aria2-pro"
+ARIA2_PRO_WEBUI_DOCKER_IMG_NAME="p3terx/ariang"
+ARIA2_PRO_PATH=""
+ARIA2_PRO_CONFIG_FOLDER=$(pwd)/aria2-pro
+ARIA2_PRO_DOWNLOADS_FOLDER=$(pwd)/downloads
+ARIA2_PRO_CONTAINER_NAME=""
+# telethon变量
+TG_DOCKER_IMG_NAME="kissyouhunter/telethon"
+TAG="latest"
+TG_PATH=""
+TG_SHELL_FOLDER=$(pwd)/telethon
+N1_TG_FOLDER=/mnt/mmcblk2p4/telethon
+TG_CONTAINER_NAME=""
+# adguardhome变量
+ADG_DOCKER_IMG_NAME="adguard/adguardhome"
+TAG="latest"
+ADG_PATH=""
+ADG_CONFIG_FOLDER=$(pwd)/adguardhome
+N1_ADG_FOLDER=/mnt/mmcblk2p4/adguardhome
+ADG_CONTAINER_NAME=""
+# x-ui变量
+XUI_DOCKER_IMG_NAME="kissyouhunter/x-ui"
+TAG="latest"
+DEV="dev"
+XUI_PATH=""
+XUI_CONFIG_FOLDER=$(pwd)/x-ui
+XUI_CONTAINER_NAME=""
+# aapanel变量
+AAPANEL_DOCKER_IMG_NAME="aapanel/aapanel"
+AAPANEL_TAG="lib"
+AAPANEL_PATH=""
+AAPANEL_CONFIG_FOLDER=$(pwd)/aapanel
+N1_AAPANEL_FOLDER=/mnt/mmcblk2p4/aapanel
+AAPANEL_CONTAINER_NAME=""
 # MaiARK 变量
 MAIARK_DOCKER_IMG_NAME="kissyouhunter/maiark"
 MAIARK_PATH=""
@@ -46,10 +136,6 @@ TIME() {
 	 }
       }
 }
-
-
-
-
 
 #cat << EOF
 TIME w "----------------------------------------"
