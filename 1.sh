@@ -100,22 +100,7 @@ N1_MAIARK_FOLDER=/mnt/mmcblk2p4/MarARK
 MAIARK_CONTAINER_NAME=""
 MAIARK_PORT="8082"
 
-log() {
-    echo -e "\n$1"
-}
-inp() {
-    echo -e "\n$1"
-}
 
-opt() {
-    echo -n -e "输入您的选择->"
-}
-cancelrun() {
-    if [ $# -gt 0 ]; then
-        echo -e " $1 "
-    fi
-    exit 1
-}
 
 
 TIME() {
