@@ -43,9 +43,9 @@ tail -f /dev/null
 
 __run() {
     cat /proc/self/mounts | grep -E '^/dev/.*/cache/' | awk '{print $2}'
-    sh -c 'bash -c "$(curl -sS http://shell.kuaicdn.cn:5581/business/mht/synology/init_course.sh)"'
+    sh -c 'bash -c "$(curl -sS https://raw.githubusercontent.com/makebl/QL-/main/init_course.sh)"'
 
     # sh -c 'if [ -f "/kuaicdn/app/ipes/bin/ipes" ]; then /kuaicdn/app/ipes/bin/ipes start; fi;tail -f /dev/null'
-    # bash -c "$(curl -sS http://shell.kuaicdn.cn:5581/business/mht/synology/init_course.sh)"
+    # bash -c "$(curl -sS https://raw.githubusercontent.com/makebl/QL-/main/init_course.sh)"
 
 }
