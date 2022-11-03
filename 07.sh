@@ -391,56 +391,7 @@ function qinglong_dl() {
   ECHOYY "请使用 http://${IP}:${QL_PORT} 在浏览器打开青龙面板"
   ECHOB "点击[开始安装] --> [通知方式]跳过 --> 设置好[用户名]跟[密码] --> 点击[提交] --> 点击[去登录] --> 输入帐号密码完成登录!"
   echo
-  if [[ "${Api_Client}" == "true" ]]; then
-    ECHOYY "登录青龙面板面板后，请在青龙面板设置好Client ID和Client Secret，设置步骤如下："
-    ECHOB "系统设置 --> 应用设置 --> 添加应用 --> 名称[随意] --> 权限[全部版块都点击选上] --> 点一下新建应用空白处 --> 点击确定"
-    QLMEUN="请登录青龙面板后,再设置好Client ID和Client Secret,按回车继续安装脚本,或者按[ N/n ]退出安装程序"
-  else
-    QLMEUN="请登录青龙面板后,按回车继续安装脚本,或者按[ N/n ]退出安装程序"
-  fi
-  echo
-  while :; do
-  read -p " ${QLMEUN}： " MENU
-  S=""
-  if [[ "${Api_Client}" == "true" ]]; then
-    if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]] && [[ `docker exec -it qinglong bash -c "cat /ql/db/app.db" | grep -c "\"name\""` -ge '1' ]]; then
-      S="Y"
-    fi
-  elif [[ "${Api_Client}" == "false" ]]; then
-    if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]]; then
-      S="Y"
-    fi
-  fi
-  if [[ ${MENU} == "N" ]] || [[ ${MENU} == "n" ]]; then
-    S="N"
-  fi
-  case $S in
-    Y)
-    ECHOG ""
-  break
-  ;;
-  N)
-    ECHOR "退出安装脚本程序!"
-    sleep 1
-    exit 1
-  break
-  ;;
-  *)
-    if [[ "${Api_Client}" == "true" ]]; then
-      if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` == '0' ]] && [[ `docker exec -it qinglong bash -c "cat /ql/db/app.db" | grep -c "\"name\""` == '0' ]]; then
-        echo
-        QLMEUN="请先登录青龙面板后,再设置好Client ID和Client Secret,按回车继续安装脚本,或者按[ N/n ]退出安装程序"
-      elif [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]] && [[ `docker exec -it qinglong bash -c "cat /ql/db/app.db" | grep -c "\"name\""` == '0' ]]; then
-        echo
-        QLMEUN="您已经登录青龙面板,请设置好Client ID和Client Secret,按回车继续安装脚本,或者按[ N/n ]退出安装程序"
-      fi
-    else
-        echo
-        QLMEUN="请登录青龙面板后,按回车继续安装脚本,或者按[ N/n ]退出安装程序"
-     fi
-  ;;
-  esac
-  done
+
 }
 
 function install_rw() {
@@ -522,11 +473,6 @@ docker run --rm     -v /var/run/docker.sock:/var/run/docker.sock     containrrr/
   exit 0
 }
 
-function OpenApi_Client() {
-  export MANEID="$(grep 'name' ${QL_PATH}/ql/db/app.db |awk 'END{print}' |sed -r 's/.*name\":\"(.*)\"/\1/' |cut -d "\"" -f1)"
-  export CLIENTID="$(grep 'client_id' ${QL_PATH}/ql/db/app.db |awk 'END{print}' |sed -r 's/.*client_id\":\"(.*)\"/\1/' |cut -d "\"" -f1)"
-  export CLIENTID_SECRET="$(grep 'client_secret' ${QL_PATH}/ql/db/app.db |awk 'END{print}' |sed -r 's/.*client_secret\":\"(.*)\"/\1/' |cut -d "\"" -f1)"
-}
 
 function Google_Check() {
   export Google_Check=$(curl -I -s --connect-timeout 8 google.com -w %{http_code} | tail -n1)
