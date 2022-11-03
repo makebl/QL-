@@ -147,8 +147,6 @@ function qinglong_port() {
   ECHOGG "您的IP为：${IP}"
   ECHOGG "${YPORT}：${QL_PORT}"
   ECHOGG "您的青龙登录地址将为：http://${IP}:${QL_PORT}"
-  if [[ "${Api_Client}" == "true" ]]; then
-    echo
     ECHOYY "maiark面板名称为：${NVJDCNAME}"
     ECHOYY "maiark面板端口为：${JDC_PORT}"
     ECHOYY "通过maiark面板验证最大挂机数为：${CAPACITY}"
