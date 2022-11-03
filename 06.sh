@@ -511,7 +511,6 @@ function pull_nvjdc() {
     print_error "maiark镜像安装失败"
     exit 1
   fi
-}
   ECHOY "您的maiark面板地址为：http://${IP}:${JDC_PORT}"
   #docker restart maiark
   ECHOYY "请前往opt/maiark/arkconfig.json对接青龙!"
