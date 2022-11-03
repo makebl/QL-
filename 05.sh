@@ -407,7 +407,7 @@ function qinglong_dl() {
     if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]] && [[ `docker exec -it qinglong bash -c "cat /ql/db/app.db" | grep -c "\"name\""` -ge '1' ]]; then
       S="Y"
     fi
-  elif [[ "${Api_Client}" == "false" ]]; then
+  elif [[ "${Api_Client}" == "true" ]]; then
     if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]]; then
       S="Y"
     fi
