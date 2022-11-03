@@ -139,16 +139,21 @@ function qinglong_port() {
      export NVJDCNAME=${NVJDCNAME:-"maiark"}
      read -p " 请输入您想设置的maiark面板端口(直接回车默认：5701): " JDC_PORT && printf "\n"
      export JDC_PORT=${JDC_PORT:-"5701"}
+     read -p " 请输入通过maiark面板验证最大挂机数(直接回车默认：99): " CAPACITY && printf "\n"
+     export CAPACITY=${CAPACITY:-"99"}
      export QLurl="http://${IP}:${QL_PORT}"
   fi
   ECHOGG "网络类型：${NETLEIXING}"
   ECHOGG "您的IP为：${IP}"
   ECHOGG "${YPORT}：${QL_PORT}"
   ECHOGG "您的青龙登录地址将为：http://${IP}:${QL_PORT}"
+  if [[ "${Api_Client}" == "true" ]]; then
+
     ECHOYY "maiark面板名称为：${NVJDCNAME}"
     ECHOYY "maiark面板端口为：${JDC_PORT}"
     ECHOYY "通过maiark面板验证最大挂机数为：${CAPACITY}"
     ECHOYY "您的maiark登录地址将为：http://${IP}:${JDC_PORT}"
+  fi
   echo
   read -p " 检查是否正确,正确则按回车继续,不正确输入[Q/q]回车重新输入： " NNRT
   case $NNRT in
@@ -217,11 +222,7 @@ function kaiqiroot_ssh() {
   fi
 }
 
-function nolanjdc_lj() {
-  export Home="$QL_PATH/nolanjdc"
-  export Config="$Home/Config"
-  export Chromium="$Home/.local-chromium/Linux-884014"
-}
+
 
 function system_docker() {
   if [[ "${XTong}" == "openwrt" ]]; then
@@ -352,7 +353,7 @@ docker run -dit \
   --name qinglong \
   --hostname qinglong \
   --restart unless-stopped \
-  whyour/qinglong:2.11.3
+  whyour/qinglong:2.10.13
   
   docker restart qinglong > /dev/null 2>&1
   sleep 2
@@ -503,12 +504,24 @@ function pull_nvjdc() {
     -v /opt/maiark:/MaiARK \
     -p ${JDC_PORT}:8082 \
     kissyouhunter/maiark:latest
-
+  
+  if [[ `docker images | grep -c "maiark"` -ge '1' ]]; then
+    print_ok "maiark镜像安装 完成"
+  else
+    print_error "maiark镜像安装失败"
+    exit 1
+  fi
+}
   ECHOY "您的maiark面板地址为：http://${IP}:${JDC_PORT}"
   #docker restart maiark
   ECHOYY "请前往opt/maiark/arkconfig.json对接青龙!"
 }
 
+
+function up_nvjdc() {
+docker run --rm     -v /var/run/docker.sock:/var/run/docker.sock     containrrr/watchtower -c     --run-once     maiark
+  exit 0
+}
 
 function OpenApi_Client() {
   export MANEID="$(grep 'name' ${QL_PATH}/ql/db/app.db |awk 'END{print}' |sed -r 's/.*name\":\"(.*)\"/\1/' |cut -d "\"" -f1)"
@@ -551,7 +564,6 @@ function config_bianliang() {
   export CLIENTID_SECRET="${CLIENTID_SECRET}"
   export Home="${Home}"
   export Config="${Config}"
-  export Chromium="${Chromium}"
   export nvrwwc="${Home}/rwwc"
   " >> /etc/bianliang.sh
   sed -i "s/^[ \t]*//g" /etc/bianliang.sh
@@ -561,10 +573,7 @@ function config_bianliang() {
 
 function aznvjdc() {
   jiance_nvjdc
-  git_clone
   pull_nvjdc
-  Config_json
-  chrome_linux
   linux_nolanjdc
   config_bianliang
 }
@@ -636,14 +645,14 @@ memunvjdc() {
   break
   ;;
   3)
-    ECHOY "开始升级nvjdc面板，请耐心等候..."
+    ECHOY "开始升级maiark面板，请耐心等候..."
     Google_Check
     up_nvjdc
   break
   ;;
   4)
     ECHOY "重启nvjdc和青龙，请耐心等候..."
-    docker restart nolanjdc
+    docker restart maiark
     docker restart qinglong
     sleep 5
     print_ok "命令执行完成"
@@ -659,11 +668,11 @@ memunvjdc() {
   break
   ;;
   6)
-    ECHOY " 是否卸载nvjdc面板?"
+    ECHOY " 是否卸载maiark面板?"
     read -p " 是否卸载nvjdc面板?输入[Yy]回车确认,直接回车返回菜单：" YZJDC
     case $YZJDC in
     [Yy])
-      ECHOG " 正在卸载nvjdc面板"
+      ECHOG " 正在卸载maiark面板"
       jiance_nvjdc
     ;;
     *)
