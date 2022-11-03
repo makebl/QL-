@@ -582,7 +582,6 @@ function qinglong_nvjdc() {
   Google_Check
   system_check
   kaiqiroot_ssh
-  nolanjdc_lj
   system_docker
   systemctl_status
   uninstall_qinglong
