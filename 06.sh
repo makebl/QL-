@@ -139,8 +139,6 @@ function qinglong_port() {
      export NVJDCNAME=${NVJDCNAME:-"maiark"}
      read -p " 请输入您想设置的maiark面板端口(直接回车默认：5701): " JDC_PORT && printf "\n"
      export JDC_PORT=${JDC_PORT:-"5701"}
-     read -p " 请输入通过maiark面板验证最大挂机数(直接回车默认：99): " CAPACITY && printf "\n"
-     export CAPACITY=${CAPACITY:-"99"}
      export QLurl="http://${IP}:${QL_PORT}"
   fi
   ECHOGG "网络类型：${NETLEIXING}"
@@ -407,7 +405,7 @@ function qinglong_dl() {
     if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]] && [[ `docker exec -it qinglong bash -c "cat /ql/db/app.db" | grep -c "\"name\""` -ge '1' ]]; then
       S="Y"
     fi
-  elif [[ "${Api_Client}" == "true" ]]; then
+  elif [[ "${Api_Client}" == "false" ]]; then
     if [[ `docker exec -it qinglong bash -c "cat /ql/config/auth.json" | grep -c "\"token\""` -ge '1' ]]; then
       S="Y"
     fi
