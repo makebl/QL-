@@ -136,8 +136,8 @@ function qinglong_port() {
   fi
   if [[ "${Api_Client}" == "true" ]]; then
      read -p " maiark面板名称，可中文可英文(直接回车默认：maiark): " NVJDCNAME && printf "\n"
-     export NVJDCNAME=${NVJDCNAME:-"NolanJDCloud"}
-     read -p " 请输入您想设置的nvjdc面板端口(直接回车默认：5701): " JDC_PORT && printf "\n"
+     export NVJDCNAME=${NVJDCNAME:-"maiark"}
+     read -p " 请输入您想设置的maiark面板端口(直接回车默认：5701): " JDC_PORT && printf "\n"
      export JDC_PORT=${JDC_PORT:-"5701"}
      read -p " 请输入通过maiark面板验证最大挂机数(直接回车默认：99): " CAPACITY && printf "\n"
      export CAPACITY=${CAPACITY:-"99"}
