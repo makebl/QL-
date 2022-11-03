@@ -151,7 +151,6 @@ function qinglong_port() {
     ECHOYY "maiark面板端口为：${JDC_PORT}"
     ECHOYY "通过maiark面板验证最大挂机数为：${CAPACITY}"
     ECHOYY "您的maiark登录地址将为：http://${IP}:${JDC_PORT}"
-  fi
   echo
   read -p " 检查是否正确,正确则按回车继续,不正确输入[Q/q]回车重新输入： " NNRT
   case $NNRT in
