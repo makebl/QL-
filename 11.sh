@@ -142,8 +142,8 @@ function qinglong_port() {
      read -p " 请输入通过maiark面板验证最大挂机数(直接回车默认：99): " CAPACITY && printf "\n"
      export CAPACITY=${CAPACITY:-"99"}
      export QLurl="http://${IP}:${QL_PORT}"
-
-     fi
+   else
+    fi
   fi
   ECHOGG "网络类型：${NETLEIXING}"
   ECHOGG "您的IP为：${IP}"
