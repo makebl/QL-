@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-
 #====================================================
 #	System Request:Ubuntu 18.04+/20.04+
 #	Author:	dahuilang
@@ -102,7 +101,7 @@ function qinglong_port() {
   ;;
   esac
   done
-  export local_ip="$(curl -sS --connect-timeout 10 -m 60 https://www.bt.cn/Api/getIpAddress)"
+  export local_ip="$(curl -sS --connect-timeout 10 -m 60 https://ip.3322.net)"
   export YUMING="请输入您当前服务器的IP[比如：${local_ip}]"
   echo
   echo
@@ -135,21 +134,13 @@ function qinglong_port() {
     export NETLEIXING="host"
   fi
   if [[ "${Api_Client}" == "true" ]]; then
-     read -p " nvjdc面板名称，可中文可英文(直接回车默认：NolanJDCloud): " NVJDCNAME && printf "\n"
-     export NVJDCNAME=${NVJDCNAME:-"NolanJDCloud"}
-     read -p " 请输入您想设置的nvjdc面板端口(直接回车默认：5701): " JDC_PORT && printf "\n"
-     export JDC_PORT=${JDC_PORT:-"5701"}
-     read -p " 请输入通过nvjdc面板验证最大挂机数(直接回车默认：99): " CAPACITY && printf "\n"
+     read -p " maiark面板名称，可中文可英文(直接回车默认：maiark): " NVJDCNAME && printf "\n"
+     export NVJDCNAME=${NVJDCNAME:-"maiark"}
+     read -p " 请输入您想设置的maiark面板端口(直接回车默认：8082): " JDC_PORT && printf "\n"
+     export JDC_PORT=${JDC_PORT:-"8082"}
+     read -p " 请输入通过maiark面板验证最大挂机数(直接回车默认：99): " CAPACITY && printf "\n"
      export CAPACITY=${CAPACITY:-"99"}
-     echo -e "\033[32m pushplus网址：http://www.pushplus.plus \033[0m"
-     read -p " 输入pushplus的TOKEN，有人通过nvjdc面板进入挂机或删除KEY时通知您(直接回车默认不通知): " PUSHPLUS && printf "\n"
-     export PUSHPLUS=${PUSHPLUS:-""}
-     export QLurl="http://${IP}:${QL_PORT}"
-     if [[ -z ${PUSHPLUS} ]]; then
-       PUSHP="不开启通知"
-     else
-       PUSHP="${PUSHPLUS}"
-     fi
+
   fi
   ECHOGG "网络类型：${NETLEIXING}"
   ECHOGG "您的IP为：${IP}"
@@ -157,11 +148,10 @@ function qinglong_port() {
   ECHOGG "您的青龙登录地址将为：http://${IP}:${QL_PORT}"
   if [[ "${Api_Client}" == "true" ]]; then
     echo
-    ECHOYY "nvjdc面板名称为：${NVJDCNAME}"
-    ECHOYY "nvjdc面板端口为：${JDC_PORT}"
-    ECHOYY "通过nvjdc面板验证最大挂机数为：${CAPACITY}"
-    ECHOYY "pushplus的TOKEN为：${PUSHP}"
-    ECHOYY "您的nvjdc登录地址将为：http://${IP}:${JDC_PORT}"
+    ECHOYY "maiark面板名称为：${NVJDCNAME}"
+    ECHOYY "maiark面板端口为：${JDC_PORT}"
+    ECHOYY "通过maiark面板验证最大挂机数为：${CAPACITY}"
+    ECHOYY "您的maiark登录地址将为：http://${IP}:${JDC_PORT}"
   fi
   echo
   read -p " 检查是否正确,正确则按回车继续,不正确输入[Q/q]回车重新输入： " NNRT
@@ -231,8 +221,8 @@ function kaiqiroot_ssh() {
   fi
 }
 
-function nolanjdc_lj() {
-  export Home="$QL_PATH/nolanjdc"
+function maiark_lj() {
+  export Home="$QL_PATH/maiark"
   export Config="$Home/Config"
   export Chromium="$Home/.local-chromium/Linux-884014"
 }
@@ -358,6 +348,7 @@ docker run -dit \
   -v $QL_PATH/ql/db:/ql/db \
   -v $QL_PATH/ql/scripts:/ql/scripts \
   -v $QL_PATH/ql/jbot:/ql/jbot \
+  -v $QL_PATH/ql/deps:/ql/deps \
   -v $QL_PATH/ql/raw:/ql/raw \
   -v $QL_PATH/ql/jd:/ql/jd \
   -v $QL_PATH/ql/repo:/ql/repo \
@@ -485,266 +476,44 @@ function install_yanzheng() {
   print_ok "任务安装完成，请刷新青龙面板查看"
 }
 
-function jiance_nvjdc() {
-  if [[ `docker images | grep -c "nvjdc"` -ge '1' ]] || [[ `docker ps -a | grep -c "nvjdc"` -ge '1' ]]; then
-    ECHOY "检测到nvjdc面板，正在卸载nvjdc面板，请稍后..."
-    dockernv=$(docker ps -a|grep nvjdc) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
-    imagesnv=$(docker images|grep nvjdc) && imagesnvid=$(awk '{print $(3)}' <<<${imagesnv})
+function jiance_maiark() {
+  if [[ `docker images | grep -c "maiark"` -ge '1' ]] || [[ `docker ps -a | grep -c "maiark"` -ge '1' ]]; then
+    ECHOY "检测到maiark面板，正在卸载maiark面板，请稍后..."
+    dockernv=$(docker ps -a|grep maiark) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
+    imagesnv=$(docker images|grep maiark) && imagesnvid=$(awk '{print $(3)}' <<<${imagesnv})
     docker stop -t=5 "${dockernvid}" > /dev/null 2>&1
     docker rm "${dockernvid}"
     docker rmi "${imagesnvid}"
-    find / -iname 'nolanjdc' | xargs -i rm -rf {} > /dev/null 2>&1
-    find / -iname 'nvjdc' | xargs -i rm -rf {} > /dev/null 2>&1
-    if [[ `docker images | grep -c "nvjdc"` == '0' ]]; then
-      print_ok "nvjdc面板卸载完成"
+    if [[ `docker images | grep -c "maiark"` == '0' ]]; then
+      print_ok "maiark面板卸载完成"
     else
-      print_error "nvjdc面板卸载失败"
+      print_error "maiark面板卸载失败"
       exit 1
     fi
   fi
 }
 
-function git_clone() {
-  TIME y " >>>>>>>>>>>开始安装MaiARK (AMD64 CPU)"
-  # 创建映射文件夹
-  input_container_maiark1_config() {
-  echo -n -e "请输入MaiARK配置文件保存的绝对路径（示例：/home/MaiARK)，回车默认为当前目录: "
-  read maiark_path
-  if [ -z "$maiark_path" ]; then
-      MAIARK_PATH=$MAIARK_CONFIG_FOLDER
-  elif [ -d "$maiark_path" ]; then
-      MAIARK_PATH=$maiark_path
-  else
-      MAIARK_PATH=$maiark_path
-  fi
-  CONFIG_PATH=$MAIARK_PATH
-  }
-  input_container_maiark1_config
 
-  # 输入容器名
-  input_container_maiark1_name() {
-    echo -n -e "请输入将要创建的容器名[默认为：maiark]-> "
-    read container_name
-    if [ -z "$container_name" ]; then
-        MAIARK_CONTAINER_NAME="maiark"
-    else
-        MAIARK_CONTAINER_NAME=$container_name
-    fi
-  }
-  input_container_maiark1_name
 
-  # 网络模式
-  input_container_maiark1_network_config() {
-  inp "请选择容器的网络类型：\n1) host\n2) bridge[默认]"
-  opt
-  read net
-  if [ "$net" = "1" ]; then
-      NETWORK="host"
-      MAIARK_PORT="8082"
-  fi
-  
-  if [ "$NETWORK" = "bridge" ]; then
-      inp "是否修改MaiMRK端口[默认 8082]：\n1) 修改\n2) 不修改[默认]"
-      opt
-      read change_maiark_port
-      if [ "$change_maiark_port" = "1" ]; then
-          echo -n -e "输入想修改的端口->"
-          read MAIARK_PORT
-          echo $MAIARK_PORT
-      else
-          MAIARK_PORT="8082"
-      fi
-  fi
-  }
-  input_container_maiark1_network_config
+function linux_maiark() {
+ECHOY "maiark安装中，请稍后..."
 
-  # 确认
-  while true
-  do
-  	TIME y "MaiARK 配置文件路径：$CONFIG_PATH"
-  	TIME y "Maiark 容器名：$MAIARK_CONTAINER_NAME"
-    TIME y "Maiark 端口：$MAIARK_PORT"
-    TIME r "确认下映射路径是否正确！！！"
-  	read -r -p "以上信息是否正确？[Y/n] " input111
-  	case $input111 in
-  		[yY][eE][sS]|[yY])
-  			break
-  			;;
-  		[nN][oO]|[nN])
-  			TIME w "即将返回上一步"
-  			sleep 1
-  			input_container_maiark1_config
-  			input_container_maiark1_name
-            input_container_maiark1_network_config
-            MAIARK_PORT="8082"
-  			;;
-  		*)
-  			TIME r "输入错误，请输入[Y/n]"
-  			;;
-  	esac
-  done
+    docker run -d \
+    --name ${NVJDCNAME} \
+    --hostname maiark \
+    --restart always \
+    -v /opt/maiark:/MaiARK \
+    -p ${JDC_PORT}:8082 \
+    kissyouhunter/maiark:latest
 
-  TIME y " >>>>>>>>>>>配置完成，开始安装MaiARK"
-  log "1.开始创建配置文件目录"
-  PATH_LIST=($CONFIG_PATH)
-  for i in ${PATH_LIST[@]}; do
-      mkdir -p $i
-  done
-
-  log "2.开始创建容器并执行"
-  docker pull $MAIARK_DOCKER_IMG_NAME:$TAG
-  docker run -d \
-      -v $CONFIG_PATH:/MaiARK \
-      --name $MAIARK_CONTAINER_NAME \
-      --hostname $MAIARK_CONTAINER_NAME \
-      --restart always \
-      --network $NETWORK \
-      -p $MAIARK_PORT:8082 \
-      $MAIARK_DOCKER_IMG_NAME:$TAG
-
-      if [ $? -ne 0 ] ; then
-          cancelrun "** 错误：容器创建失败，请翻译以上英文报错，Google/百度尝试解决问题！"
-      fi
-
-      log "列出所有宿主机上的容器"
-      docker ps -a
-    TIME g "------------------------------------------------------------------------------"
-    TIME g "|                   MaiARK启动需要一点点时间，请耐心等待！                   |"
-    sleep 10
-    TIME g "|                          安装完成，自动退出脚本                            |"
-    TIME g "|                          访问方式为 宿主机ip:$MAIARK_PORT                          |"
-    TIME g "|              请先配置好映射文件夹下的arkconfig.json再重启容器              |"
-    TIME r "|  桥接模式请不要修改config下的端口8082，host模式随意(前提是指定自己在干啥)  |"
-    TIME r "|                 请看清映射的文件夹路径去找config文件                       |"
-    TIME r "|   op用户出现“docker0: iptables: No chain/target/match by that name”错误    |"
-    TIME r "|              输入命令“/etc/init.d/dockerd restart” 重启docker              |"
-    TIME r "|                     再输入“docker start $MAIARK_CONTAINER_NAME” 启动容器                   |"
-    TIME r "|       op用户出现容器正常启动，但web界面无法方法Turbo ACC 网络加速设置      |"
-    TIME r "|进入“网络——Turbo ACC 网络加速设置” 开启或关闭“全锥型 NAT”就可正常访问web界面|"
-    TIME g "------------------------------------------------------------------------------"
+  ECHOY "您的maiark面板地址为：http://${IP}:${JDC_PORT}"
+  #docker restart maiark
+  ECHOYY "请前往opt/maiark/arkconfig.json对接青龙!"
+}
+function up_nvjdc() {
+docker run --rm     -v /var/run/docker.sock:/var/run/docker.sock     containrrr/watchtower -c     --run-once     maiark
   exit 0
-  ;;
- 2)  
-  TIME y " >>>>>>>>>>>开始安装MaiARK到N1的/mnt/mmcblk2p4/"
-  # 创建映射文件夹
-  input_container_maiark3_config() {
-  echo -n -e "请输入MaiARK存储的文件夹名称（如：MaiARK)，回车默认为 MaiARK: "
-  read maiark_path
-  if [ -z "$maiark_path" ]; then
-      MAIARK_PATH=$N1_MAIARK_FOLDER
-  elif [ -d "$maiark_path" ]; then
-      MAIARK_PATH=/mnt/mmcblk2p4/$maiark_path
-  else
-      MAIARK_PATH=/mnt/mmcblk2p4/$maiark_path
-  fi
-  CONFIG_PATH=$MAIARK_PATH
-  }
-  input_container_maiark3_config
-  
-  # 输入容器名
-  input_container_maiark3_name() {
-    echo -n -e "请输入将要创建的容器名[默认为：maiark]-> "
-    read container_name
-    if [ -z "$container_name" ]; then
-        MAIARK_CONTAINER_NAME="maiark"
-    else
-        MAIARK_CONTAINER_NAME=$container_name
-    fi
-  }
-  input_container_maiark3_name
-
-  # 网络模式
-  input_container_maiark3_network_config() {
-  inp "请选择容器的网络类型：\n1) host\n2) bridge[默认]"
-  opt
-  read net
-  if [ "$net" = "1" ]; then
-      NETWORK="host"
-      MAIARK_PORT="8082"
-  fi
-  
-  if [ "$NETWORK" = "bridge" ]; then
-      inp "是否修改MaiMRK端口[默认 8082]：\n1) 修改\n2) 不修改[默认]"
-      opt
-      read change_maiark_port
-      if [ "$change_maiark_port" = "1" ]; then
-          echo -n -e "输入想修改的端口->"
-          read MAIARK_PORT
-      else
-          MAIARK_PORT="8082"
-      fi
-  fi
-  }
-  input_container_maiark3_network_config
-
-
-  # 确认
-  while true
-  do
-  	TIME y "MaiARK 配置文件路径：$CONFIG_PATH"
-  	TIME y "MaiARK 容器名：$MAIARK_CONTAINER_NAME"
-    TIME y "Maiark 端口：$MAIARK_PORT"
-    TIME r "确认下映射路径是否正确！！！"
-  	read -r -p "以上信息是否正确？[Y/n] " input113
-  	case $input113 in
-  		[yY][eE][sS]|[yY])
-  			break
-  			;;
-  		[nN][oO]|[nN])
-  			TIME w "即将返回上一步"
-  			sleep 1
-  			input_container_maiark3_config
-  			input_container_maiark3_name
-            input_container_maiark3_network_config
-            MAIARK_PORT="8082"
-  			;;
-  		*)
-  			TIME r "输入错误，请输入[Y/n]"
-  			;;
-  	esac
-  done
-
-  TIME y " >>>>>>>>>>>配置完成，开始安装MaiARK"
-  log "1.开始创建配置文件目录"
-  PATH_LIST=($CONFIG_PATH)
-  for i in ${PATH_LIST[@]}; do
-      mkdir -p $i
-  done
-
-  log "3.开始创建容器并执行"
-  docker pull $MAIARK_DOCKER_IMG_NAME:$TAG
-  docker run -dit \
-      -t \
-      -v $CONFIG_PATH:/MaiARK \
-      --name $MAIARK_CONTAINER_NAME \
-      --hostname $MAIARK_CONTAINER_NAME \
-      --restart always \
-      --network $NETWORK \
-      -p $MAIARK_PORT:8082 \
-      $MAIARK_DOCKER_IMG_NAME:$TAG
-
-      if [ $? -ne 0 ] ; then
-          cancelrun "** 错误：容器创建失败，请翻译以上英文报错，Google/百度尝试解决问题！"
-      fi
-
-      log "列出所有宿主机上的容器"
-      docker ps -a
-    TIME g "------------------------------------------------------------------------------"
-    TIME g "|                   MaiARK启动需要一点点时间，请耐心等待！                   |"
-    sleep 10
-    TIME g "|                          安装完成，自动退出脚本                            |"
-    TIME g "|                          访问方式为 宿主机ip:$MAIARK_PORT                          |"
-    TIME g "|              请先配置好映射文件夹下的arkconfig.json再重启容器              |"
-    TIME r "|  桥接模式请不要修改config下的端口8082，host模式随意(前提是指定自己在干啥)  |"
-    TIME r "|                 请看清映射的文件夹路径去找config文件                       |"
-    TIME r "|   op用户出现“docker0: iptables: No chain/target/match by that name”错误    |"
-    TIME r "|              输入命令“/etc/init.d/dockerd restart” 重启docker              |"
-    TIME r "|                     再输入“docker start $MAIARK_CONTAINER_NAME” 启动容器                   |"
-    TIME r "|       op用户出现容器正常启动，但web界面无法方法Turbo ACC 网络加速设置      |"
-    TIME r "|进入“网络——Turbo ACC 网络加速设置” 开启或关闭“全锥型 NAT”就可正常访问web界面|"
-    TIME g "------------------------------------------------------------------------------"
-  exit 0
-  ;;
+}
 
 function OpenApi_Client() {
   export MANEID="$(grep 'name' ${QL_PATH}/ql/db/app.db |awk 'END{print}' |sed -r 's/.*name\":\"(.*)\"/\1/' |cut -d "\"" -f1)"
@@ -797,19 +566,9 @@ function config_bianliang() {
 }
 
 function aznvjdc() {
-  jiance_nvjdc
-  git_clone
-  pull_nvjdc
-  Config_json
-  chrome_linux
-  linux_nolanjdc
+  jiance_maiark
+  linux_maiark
   config_bianliang
-MAIARK_DOCKER_IMG_NAME="kissyouhunter/maiark"
-MAIARK_PATH=""
-MAIARK_CONFIG_FOLDER=$(pwd)/MaiARK
-N1_MAIARK_FOLDER=/mnt/mmcblk2p4/MarARK
-MAIARK_CONTAINER_NAME=""
-MAIARK_PORT="8082"
 }
 
 function qinglong_nvjdc() {
@@ -817,11 +576,11 @@ function qinglong_nvjdc() {
   Google_Check
   system_check
   kaiqiroot_ssh
-  nolanjdc_lj
+  maiark_lj
   system_docker
   systemctl_status
   uninstall_qinglong
-  jiance_nvjdc
+  jiance_maiark
   sys_kongjian
   install_ql
   qinglong_dl
@@ -840,7 +599,7 @@ function azqinglong() {
   system_docker
   systemctl_status
   uninstall_qinglong
-  jiance_nvjdc
+  jiance_maiark
   sys_kongjian
   install_ql
   qinglong_dl
@@ -856,11 +615,11 @@ memunvjdc() {
   echo
   ECHOB " 1. 升级青龙面板"
   ECHOB " 2. 更新撸豆脚本库"
-  ECHOB " 3. 升级nvjdc面板"
-  ECHOB " 4. 重启青龙和nvjdc"
+  ECHOB " 3. 升级maiark面板"
+  ECHOB " 4. 重启青龙和maiark"
   ECHOB " 5. 重置青龙登录错误次数和检测环境并修复"
-  ECHOB " 6. 卸载nvjdc面板"
-  ECHOB " 7. 卸载青龙+nvjdc面板"
+  ECHOB " 6. 卸载maiark面板"
+  ECHOB " 7. 卸载青龙+maiark面板"
   ECHOB " 8. 进入第一主菜单（安装界面）"
   ECHOB " 9. 退出程序!"
   echo
@@ -879,14 +638,14 @@ memunvjdc() {
   break
   ;;
   3)
-    ECHOY "开始升级nvjdc面板，请耐心等候..."
+    ECHOY "开始升级maiark面板，请耐心等候..."
     Google_Check
-    up_nvjdc
+    up_maiark
   break
   ;;
   4)
-    ECHOY "重启nvjdc和青龙，请耐心等候..."
-    docker restart nolanjdc
+    ECHOY "重启maiark和青龙，请耐心等候..."
+    docker restart maiark
     docker restart qinglong
     sleep 5
     print_ok "命令执行完成"
@@ -902,12 +661,12 @@ memunvjdc() {
   break
   ;;
   6)
-    ECHOY " 是否卸载nvjdc面板?"
-    read -p " 是否卸载nvjdc面板?输入[Yy]回车确认,直接回车返回菜单：" YZJDC
+    ECHOY " 是否卸载maiark面板?"
+    read -p " 是否卸载maiark面板?输入[Yy]回车确认,直接回车返回菜单：" YZJDC
     case $YZJDC in
     [Yy])
-      ECHOG " 正在卸载nvjdc面板"
-      jiance_nvjdc
+      ECHOG " 正在卸载maiark面板"
+      jiance_maiark
     ;;
     *)
       memunvjdc "$@"
@@ -916,13 +675,13 @@ memunvjdc() {
   break
   ;;
   7)
-    ECHOY " 是否卸载青龙+nvjdc面板?"
-    read -p " 是否卸载青龙+nvjdc面板?输入[Yy]回车确认,直接回车返回菜单：" YZQLNV
+    ECHOY " 是否卸载青龙+maiark面板?"
+    read -p " 是否卸载青龙+maiark面板?输入[Yy]回车确认,直接回车返回菜单：" YZQLNV
     case $YZQLNV in
     [Yy])
-      ECHOG "正在卸载青龙+nvjdc面板"
+      ECHOG "正在卸载青龙+maiark面板"
       uninstall_qinglong
-      jiance_nvjdc
+      jiance_maiark
       rm -rf /etc/bianliang.sh
     ;;
     *)
@@ -1028,8 +787,8 @@ memuaz() {
   echo
   echo
   [[ -n "${kugonggao}" ]] && ECHOY " ${kugonggao}"
-  ECHOB " 1. 安装青龙+任务+依赖+nvjdc面板"
-  ECHOB " 2. 安装青龙+任务+nvjdc面板（依赖自行在青龙面板安装）"
+  ECHOB " 1. 安装青龙+任务+依赖+maiark面板"
+  ECHOB " 2. 强烈推荐安装青龙+任务+maiark面板（依赖自行在青龙面板安装）"
   ECHOB " 3. 安装青龙+任务+依赖"
   ECHOB " 4. 安装青龙+任务（依赖自行在青龙面板安装）"
   ECHOB " 5. 退出安装程序!"
@@ -1041,25 +800,25 @@ memuaz() {
   1)
     export Api_Client="true"
     export Npm_yilai="true"
-    export Sys_kj="5"
-    export Ql_nvjdc="和nvjdc面板"
-    ECHOG " 安装青龙+任务+依赖+nvjdc面板"
+    export Sys_kj="4"
+    export Ql_nvjdc="和maiark面板"
+    ECHOG " 安装青龙+任务+依赖+maiark面板"
     qinglong_nvjdc
   break
   ;;
   2)
     export Api_Client="true"
     export Npm_yilai="false"
-    export Sys_kj="5"
-    export Ql_nvjdc="和nvjdc面板"
-    ECHOG " 安装青龙+任务+nvjdc面板（依赖自行在青龙面板安装）"
+    export Sys_kj="4"
+    export Ql_nvjdc="和maiark面板"
+    ECHOG " 安装青龙+任务+maiark面板（依赖自行在青龙面板安装）"
     qinglong_nvjdc
   break
   ;;
   3)
     export Api_Client="false"
     export Npm_yilai="true"
-    export Sys_kj="5"
+    export Sys_kj="4"
     export Ql_nvjdc=""
     ECHOG " 安装青龙+任务+依赖"
     azqinglong
@@ -1068,7 +827,7 @@ memuaz() {
   4)
     export Api_Client="false"
     export Npm_yilai="false"
-    export Sys_kj="5"
+    export Sys_kj="4"
     export Ql_nvjdc=""
     ECHOG " 安装青龙+任务（依赖自行在青龙面板安装）"
     azqinglong
@@ -1097,7 +856,7 @@ memu() {
   ECHORR "自动检测docker，有则跳过，无则安装，openwrt则请自行安装docker，如果空间太小请挂载好硬盘"
   ECHORR "如果您以前安装有青龙的话，则自动删除您的青龙容器和镜像，全部推倒重新安装"
   ECHORR "如果安装当前文件夹已经存在 ql 文件的话，如果您的[环境变量文件]符合要求，就会继续使用，免除重新输入KEY的烦恼"
-  ECHORR "nvjdc面板可以进行手机验证挂机，无需复杂的抓KEY，如果是外网架设的话，任何人都可以用您的nvjdc面板进入您的青龙挂机"
+  ECHORR "maiark面板可以进行手机验证挂机，无需复杂的抓KEY，如果是外网架设的话，任何人都可以用您的maiark面板进入您的青龙挂机"
   ECHORR "安装过程会有重启docker操作，如不能接受，请退出安装"
   echo
   ECHOY " 请选择您要安装什么类型的任务库"
@@ -1136,11 +895,10 @@ memu() {
   done
 }
 [[ -f /etc/bianliang.sh ]] && source /etc/bianliang.sh
-if [[ `docker images |grep -c "qinglong"` -ge '1' ]] && [[ `docker images |grep -c "nvjdc"` -ge '1' ]] && [[ -f ${rwwc} ]] && [[ -f ${nvrwwc} ]]; then
+if [[ `docker images |grep -c "qinglong"` -ge '1' ]] && [[ `docker images |grep -c "maiark"` -ge '1' ]] && [[ -f ${rwwc} ]] && [[ -f ${nvrwwc} ]]; then
   memunvjdc "$@"
 elif [[ `docker images | grep -c "qinglong"` -ge '1' ]] && [[ -f ${rwwc} ]]; then
   memuqinglong "$@"
 else
   memu "$@"
 fi
-
