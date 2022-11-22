@@ -505,163 +505,246 @@ function jiance_nvjdc() {
 }
 
 function git_clone() {
-  ECHOG "开始安装nvjdc面板，请稍后..."
-  ECHOY "下载nvjdc源码"
-  rm -rf "${Home}" && git clone ${GithubProxyUrl}https://github.com/shidahuilang/nvjdc.git ${Home}
-  judge "nvjdc源码下载"
-}
+  TIME y " >>>>>>>>>>>开始安装MaiARK (AMD64 CPU)"
+  # 创建映射文件夹
+  input_container_maiark1_config() {
+  echo -n -e "请输入MaiARK配置文件保存的绝对路径（示例：/home/MaiARK)，回车默认为当前目录: "
+  read maiark_path
+  if [ -z "$maiark_path" ]; then
+      MAIARK_PATH=$MAIARK_CONFIG_FOLDER
+  elif [ -d "$maiark_path" ]; then
+      MAIARK_PATH=$maiark_path
+  else
+      MAIARK_PATH=$maiark_path
+  fi
+  CONFIG_PATH=$MAIARK_PATH
+  }
+  input_container_maiark1_config
 
-function pull_nvjdc() {
-  ECHOY "安装nvjdc镜像中，安装需要时间，请耐心等候..."
-  docker pull shidahuilang/nvjdc:2.4
-  if [[ `docker images | grep -c "nvjdc"` -ge '1' ]]; then
-    print_ok "nvjdc镜像安装 完成"
-  else
-    print_error "nvjdc镜像安装失败"
-    exit 1
-  fi
-}
+  # 输入容器名
+  input_container_maiark1_name() {
+    echo -n -e "请输入将要创建的容器名[默认为：maiark]-> "
+    read container_name
+    if [ -z "$container_name" ]; then
+        MAIARK_CONTAINER_NAME="maiark"
+    else
+        MAIARK_CONTAINER_NAME=$container_name
+    fi
+  }
+  input_container_maiark1_name
 
-function Config_json() {
-  mkdir -p ${Config}
-  bash -c  "$(curl -fsSL ${curlurl}/json.sh)"
-  judge "自动配置nvjdc的Config.json文件"
-  chmod +x ${Config}/Config.json
-}
+  # 网络模式
+  input_container_maiark1_network_config() {
+  inp "请选择容器的网络类型：\n1) host\n2) bridge[默认]"
+  opt
+  read net
+  if [ "$net" = "1" ]; then
+      NETWORK="host"
+      MAIARK_PORT="8082"
+  fi
+  
+  if [ "$NETWORK" = "bridge" ]; then
+      inp "是否修改MaiMRK端口[默认 8082]：\n1) 修改\n2) 不修改[默认]"
+      opt
+      read change_maiark_port
+      if [ "$change_maiark_port" = "1" ]; then
+          echo -n -e "输入想修改的端口->"
+          read MAIARK_PORT
+          echo $MAIARK_PORT
+      else
+          MAIARK_PORT="8082"
+      fi
+  fi
+  }
+  input_container_maiark1_network_config
 
-function chrome_linux() {
-  ECHOY "下载chrome-linux"
-  mkdir -p ${Chromium} && cd ${Chromium}
-  wget https://mirrors.huaweicloud.com/chromium-browser-snapshots/Linux_x64/884014/chrome-linux.zip
-  judge "chrome-linux下载"
-  ECHOY "解压chrome-linux文件包，请稍后..."
-  unzip chrome-linux.zip
-  if [[ ! -d ${Chromium}/chrome-linux ]]; then
-    print_error "chrome-linux文件解压失败"
-    exit 1
-  else
-    print_ok "解压chrome-linux文件 完成"
-    rm  -f chrome-linux.zip
-  fi
-}
+  # 确认
+  while true
+  do
+  	TIME y "MaiARK 配置文件路径：$CONFIG_PATH"
+  	TIME y "Maiark 容器名：$MAIARK_CONTAINER_NAME"
+    TIME y "Maiark 端口：$MAIARK_PORT"
+    TIME r "确认下映射路径是否正确！！！"
+  	read -r -p "以上信息是否正确？[Y/n] " input111
+  	case $input111 in
+  		[yY][eE][sS]|[yY])
+  			break
+  			;;
+  		[nN][oO]|[nN])
+  			TIME w "即将返回上一步"
+  			sleep 1
+  			input_container_maiark1_config
+  			input_container_maiark1_name
+            input_container_maiark1_network_config
+            MAIARK_PORT="8082"
+  			;;
+  		*)
+  			TIME r "输入错误，请输入[Y/n]"
+  			;;
+  	esac
+  done
 
-function linux_nolanjdc() {
-  ECHOY "启动镜像中，请稍后..."
-  cd ${Current}
-  if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    docker run   --name nolanjdc -p ${JDC_PORT}:80 -d  -v  ${Home}:/app \
-    -it --privileged=true  shidahuilang/nvjdc:2.4
-    docker exec -it nolanjdc bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
-    /etc/init.d/dockerman restart > /dev/null 2>&1
-    /etc/init.d/dockerd restart > /dev/null 2>&1
-    sleep 3
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    docker run   --name nolanjdc -p ${JDC_PORT}:80 -d  -v  ${Home}:/app \
-    -it --privileged=true  shidahuilang/nvjdc:2.4
-    docker exec -it nolanjdc bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
-    sleep 2
-  else
-    cd  ${Home}
-    docker run   --name nolanjdc -p ${JDC_PORT}:80 -d  -v  "$(pwd)":/app \
-    -v /etc/localtime:/etc/localtime:ro \
-    -it --privileged=true  shidahuilang/nvjdc:2.4
-    sleep 2
-  fi
-  cd ${Current}
-  if [[ `docker ps -a | grep -c "nvjdc"` -ge '1' ]]; then
-    docker restart nolanjdc > /dev/null 2>&1
-    docker restart qinglong > /dev/null 2>&1
-    sleep 3
-    print_ok "nvjdc镜像启动成功"
-  else
-    print_error "nvjdc镜像启动失败"
-    exit 1
-  fi
-  dockernv=$(docker ps -a|grep nvjdc) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
-  docker update --restart=always "${dockernvid}" > /dev/null 2>&1
-  rm -rf ${Home}/build.log
-  timeout 4 docker logs -f nolanjdc |tee ${Home}/build.log
-  timeout 9 docker logs -f nolanjdc |tee ${Home}/build.log
-  if [[ `grep -c "启动成功" ${Home}/build.log` -ge '1' ]] || [[ `grep -c "NETJDC started" ${Home}/build.log` -ge '1' ]]; then
-    print_ok "nvjdc安装 完成"
-    ECHOYY "nvjdc配置已自动配置完成，如您需修改可至 ${Config}/Config.json 修改!"
-  else
-    print_error "nvjdc安装失败"
-    exit 1
-  fi
-  rm -rf ${Home}/build.log
-  ECHOY "您的nvjdc面板地址为：http://${IP}:${JDC_PORT}"
-}
+  TIME y " >>>>>>>>>>>配置完成，开始安装MaiARK"
+  log "1.开始创建配置文件目录"
+  PATH_LIST=($CONFIG_PATH)
+  for i in ${PATH_LIST[@]}; do
+      mkdir -p $i
+  done
 
-function up_nvjdc() {
-  cd ${Current}
-  [[ -f /etc/bianliang.sh ]] && source /etc/bianliang.sh
-  ECHOY "下载nvjdc源码"
-  rm -rf ${QL_PATH}/nvjdcbf
-  cp -Rf ${Home} ${QL_PATH}/nvjdcbf
-  rm -rf "${Home}" && git clone ${GithubProxyUrl}https://github.com/shidahuilang/nvjdc.git ${Home}
-  judge "下载源码"
-  cp -Rf ${QL_PATH}/nvjdcbf/Config ${Home}/Config
-  cp -Rf ${QL_PATH}/nvjdcbf/.local-chromium ${Home}/.local-chromium
-  if [[ `docker images | grep -c "nvjdc"` -ge '1' ]] || [[ `docker ps -a | grep -c "nvjdc"` -ge '1' ]]; then
-    ECHOY "卸载nvjdc镜像"
-    dockernv=$(docker ps -a|grep nvjdc) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
-    imagesnv=$(docker images|grep nvjdc) && imagesnvid=$(awk '{print $(3)}' <<<${imagesnv})
-    docker stop -t=5 "${dockernvid}" > /dev/null 2>&1
-    docker rm "${dockernvid}"
-    docker rmi "${imagesnvid}"
-  fi
-  if [[ `docker images | grep -c "nvjdc"` == '0' ]]; then
-    print_ok "nvjdc镜像卸载完成"
-  else
-    print_error "nvjdc镜像卸载失败，再次尝试删除"
-  fi
-  cd ${Current}
-  ECHOG "更新镜像，请耐心等候..."
-  sudo docker pull shidahuilang/nvjdc:2.4
-  ECHOY "启动镜像"
-  if [[ -f /etc/openwrt_release ]] && [[ -f /rom/etc/openwrt_release ]]; then
-    docker run   --name nolanjdc -p ${JDC_PORT}:80 -d  -v  ${Home}:/app \
-    -it --privileged=true  shidahuilang/nvjdc:2.4
-    docker exec -it nolanjdc bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
-    /etc/init.d/dockerman restart > /dev/null 2>&1
-    /etc/init.d/dockerd restart > /dev/null 2>&1
-    sleep 3
-  elif [[ "$(. /etc/os-release && echo "$ID")" == "alpine" ]]; then
-    docker run   --name nolanjdc -p ${JDC_PORT}:80 -d  -v  ${Home}:/app \
-    -it --privileged=true  shidahuilang/nvjdc:2.4
-    docker exec -it nolanjdc bash -c "cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime"
-    sleep 2
-  else
-    cd  ${Home}
-    docker run   --name nolanjdc -p ${JDC_PORT}:80 -d  -v  "$(pwd)":/app \
-    -v /etc/localtime:/etc/localtime:ro \
-    -it --privileged=true  shidahuilang/nvjdc:2.4
-  fi
-  cd ${Current}
-  if [[ `docker ps -a | grep -c "nvjdc"` -ge '1' ]]; then
-    docker restart nolanjdc > /dev/null 2>&1
-    docker restart qinglong > /dev/null 2>&1
-    sleep 5
-    print_ok "nvjdc镜像启动成功"
-  else
-    print_error "nvjdc镜像启动失败"
-    exit 1
-  fi
-  dockernv=$(docker ps -a|grep nvjdc) && dockernvid=$(awk '{print $(1)}' <<<${dockernv})
-  docker update --restart=always "${dockernvid}" > /dev/null 2>&1
-  rm -rf ${Home}/build.log
-  timeout 4 docker logs -f nolanjdc |tee ${Home}/build.log
-  timeout 9 docker logs -f nolanjdc |tee ${Home}/build.log
-  if [[ `grep -c "启动成功" ${Home}/build.log` -ge '1' ]] || [[ `grep -c "NETJDC started" ${Home}/build.log` -ge '1' ]]; then
-    print_ok "nvjdc升级完成"
-  else
-    print_error "nvjdc升级失败"
-    exit 1
-  fi
-  rm -rf ${Home}/build.log
+  log "2.开始创建容器并执行"
+  docker pull $MAIARK_DOCKER_IMG_NAME:$TAG
+  docker run -d \
+      -v $CONFIG_PATH:/MaiARK \
+      --name $MAIARK_CONTAINER_NAME \
+      --hostname $MAIARK_CONTAINER_NAME \
+      --restart always \
+      --network $NETWORK \
+      -p $MAIARK_PORT:8082 \
+      $MAIARK_DOCKER_IMG_NAME:$TAG
+
+      if [ $? -ne 0 ] ; then
+          cancelrun "** 错误：容器创建失败，请翻译以上英文报错，Google/百度尝试解决问题！"
+      fi
+
+      log "列出所有宿主机上的容器"
+      docker ps -a
+    TIME g "------------------------------------------------------------------------------"
+    TIME g "|                   MaiARK启动需要一点点时间，请耐心等待！                   |"
+    sleep 10
+    TIME g "|                          安装完成，自动退出脚本                            |"
+    TIME g "|                          访问方式为 宿主机ip:$MAIARK_PORT                          |"
+    TIME g "|              请先配置好映射文件夹下的arkconfig.json再重启容器              |"
+    TIME r "|  桥接模式请不要修改config下的端口8082，host模式随意(前提是指定自己在干啥)  |"
+    TIME r "|                 请看清映射的文件夹路径去找config文件                       |"
+    TIME r "|   op用户出现“docker0: iptables: No chain/target/match by that name”错误    |"
+    TIME r "|              输入命令“/etc/init.d/dockerd restart” 重启docker              |"
+    TIME r "|                     再输入“docker start $MAIARK_CONTAINER_NAME” 启动容器                   |"
+    TIME r "|       op用户出现容器正常启动，但web界面无法方法Turbo ACC 网络加速设置      |"
+    TIME r "|进入“网络——Turbo ACC 网络加速设置” 开启或关闭“全锥型 NAT”就可正常访问web界面|"
+    TIME g "------------------------------------------------------------------------------"
   exit 0
-}
+  ;;
+ 2)  
+  TIME y " >>>>>>>>>>>开始安装MaiARK到N1的/mnt/mmcblk2p4/"
+  # 创建映射文件夹
+  input_container_maiark3_config() {
+  echo -n -e "请输入MaiARK存储的文件夹名称（如：MaiARK)，回车默认为 MaiARK: "
+  read maiark_path
+  if [ -z "$maiark_path" ]; then
+      MAIARK_PATH=$N1_MAIARK_FOLDER
+  elif [ -d "$maiark_path" ]; then
+      MAIARK_PATH=/mnt/mmcblk2p4/$maiark_path
+  else
+      MAIARK_PATH=/mnt/mmcblk2p4/$maiark_path
+  fi
+  CONFIG_PATH=$MAIARK_PATH
+  }
+  input_container_maiark3_config
+  
+  # 输入容器名
+  input_container_maiark3_name() {
+    echo -n -e "请输入将要创建的容器名[默认为：maiark]-> "
+    read container_name
+    if [ -z "$container_name" ]; then
+        MAIARK_CONTAINER_NAME="maiark"
+    else
+        MAIARK_CONTAINER_NAME=$container_name
+    fi
+  }
+  input_container_maiark3_name
+
+  # 网络模式
+  input_container_maiark3_network_config() {
+  inp "请选择容器的网络类型：\n1) host\n2) bridge[默认]"
+  opt
+  read net
+  if [ "$net" = "1" ]; then
+      NETWORK="host"
+      MAIARK_PORT="8082"
+  fi
+  
+  if [ "$NETWORK" = "bridge" ]; then
+      inp "是否修改MaiMRK端口[默认 8082]：\n1) 修改\n2) 不修改[默认]"
+      opt
+      read change_maiark_port
+      if [ "$change_maiark_port" = "1" ]; then
+          echo -n -e "输入想修改的端口->"
+          read MAIARK_PORT
+      else
+          MAIARK_PORT="8082"
+      fi
+  fi
+  }
+  input_container_maiark3_network_config
+
+
+  # 确认
+  while true
+  do
+  	TIME y "MaiARK 配置文件路径：$CONFIG_PATH"
+  	TIME y "MaiARK 容器名：$MAIARK_CONTAINER_NAME"
+    TIME y "Maiark 端口：$MAIARK_PORT"
+    TIME r "确认下映射路径是否正确！！！"
+  	read -r -p "以上信息是否正确？[Y/n] " input113
+  	case $input113 in
+  		[yY][eE][sS]|[yY])
+  			break
+  			;;
+  		[nN][oO]|[nN])
+  			TIME w "即将返回上一步"
+  			sleep 1
+  			input_container_maiark3_config
+  			input_container_maiark3_name
+            input_container_maiark3_network_config
+            MAIARK_PORT="8082"
+  			;;
+  		*)
+  			TIME r "输入错误，请输入[Y/n]"
+  			;;
+  	esac
+  done
+
+  TIME y " >>>>>>>>>>>配置完成，开始安装MaiARK"
+  log "1.开始创建配置文件目录"
+  PATH_LIST=($CONFIG_PATH)
+  for i in ${PATH_LIST[@]}; do
+      mkdir -p $i
+  done
+
+  log "3.开始创建容器并执行"
+  docker pull $MAIARK_DOCKER_IMG_NAME:$TAG
+  docker run -dit \
+      -t \
+      -v $CONFIG_PATH:/MaiARK \
+      --name $MAIARK_CONTAINER_NAME \
+      --hostname $MAIARK_CONTAINER_NAME \
+      --restart always \
+      --network $NETWORK \
+      -p $MAIARK_PORT:8082 \
+      $MAIARK_DOCKER_IMG_NAME:$TAG
+
+      if [ $? -ne 0 ] ; then
+          cancelrun "** 错误：容器创建失败，请翻译以上英文报错，Google/百度尝试解决问题！"
+      fi
+
+      log "列出所有宿主机上的容器"
+      docker ps -a
+    TIME g "------------------------------------------------------------------------------"
+    TIME g "|                   MaiARK启动需要一点点时间，请耐心等待！                   |"
+    sleep 10
+    TIME g "|                          安装完成，自动退出脚本                            |"
+    TIME g "|                          访问方式为 宿主机ip:$MAIARK_PORT                          |"
+    TIME g "|              请先配置好映射文件夹下的arkconfig.json再重启容器              |"
+    TIME r "|  桥接模式请不要修改config下的端口8082，host模式随意(前提是指定自己在干啥)  |"
+    TIME r "|                 请看清映射的文件夹路径去找config文件                       |"
+    TIME r "|   op用户出现“docker0: iptables: No chain/target/match by that name”错误    |"
+    TIME r "|              输入命令“/etc/init.d/dockerd restart” 重启docker              |"
+    TIME r "|                     再输入“docker start $MAIARK_CONTAINER_NAME” 启动容器                   |"
+    TIME r "|       op用户出现容器正常启动，但web界面无法方法Turbo ACC 网络加速设置      |"
+    TIME r "|进入“网络——Turbo ACC 网络加速设置” 开启或关闭“全锥型 NAT”就可正常访问web界面|"
+    TIME g "------------------------------------------------------------------------------"
+  exit 0
+  ;;
 
 function OpenApi_Client() {
   export MANEID="$(grep 'name' ${QL_PATH}/ql/db/app.db |awk 'END{print}' |sed -r 's/.*name\":\"(.*)\"/\1/' |cut -d "\"" -f1)"
@@ -721,6 +804,12 @@ function aznvjdc() {
   chrome_linux
   linux_nolanjdc
   config_bianliang
+MAIARK_DOCKER_IMG_NAME="kissyouhunter/maiark"
+MAIARK_PATH=""
+MAIARK_CONFIG_FOLDER=$(pwd)/MaiARK
+N1_MAIARK_FOLDER=/mnt/mmcblk2p4/MarARK
+MAIARK_CONTAINER_NAME=""
+MAIARK_PORT="8082"
 }
 
 function qinglong_nvjdc() {
